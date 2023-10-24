@@ -35,10 +35,10 @@ const MainPage = () => {
     },
   ];
   return (
-    <div>
+    <div className="h-full w-full relative">
       <Header />
-      <div className="container h-full w-full">
-        <div className="h-[50px] w-full flex flex-row items-center justify-between gap-14 my-10">
+      <div className="relative px-[140px]">
+        <div className="h-[50px] w-full flex flex-row items-center justify-between gap-14 my-10 ">
           <img src="/img/logo.svg" alt="logo" />
           <div className="flex flex-row w-full gap-2">
             <input

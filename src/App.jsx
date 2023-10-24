@@ -2,7 +2,7 @@ import AppRoutes from "./routes/routes";
 
 function App() {
   return (
-    <div className="App">
+    <div className="max-w-[100vw] h-[100vh]">
       <AppRoutes />
     </div>
   );
