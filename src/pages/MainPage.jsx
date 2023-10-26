@@ -42,7 +42,7 @@ const MainPage = () => {
           <img src="/img/logo.svg" alt="logo" />
           <div className="flex flex-row w-full gap-2">
             <input
-              className="border-[1px] border-[#00000033] rounded-[6px] w-full flex items-center justify-center px-5 outline-none"
+              className="border-[1px] border-[#00000033] active:border-[#009EE4] rounded-[6px] w-full flex items-center justify-center px-5 outline-none"
               type="search"
               placeholder="Поиск по объявлениям"
               name="search"

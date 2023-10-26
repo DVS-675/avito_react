@@ -27,3 +27,11 @@ body {
   padding-left: 140px;
   padding-right: 140px;
 }
+
+.input:focus-within {
+  color: #009ee4;
+}
+
+.input {
+  color: #c4c4c4;
+}
