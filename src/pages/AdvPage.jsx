@@ -1,8 +1,40 @@
 import { Link } from "react-router-dom";
 import HeaderLogged from "../components/Header/HeaderLogged";
 import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
+import Modal from "react-modal";
+import ReviewsModal from "../components/Modals/ReviewsModal";
+import React from "react";
 
 const AdvPage = () => {
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      height: "90vh",
+      background: "transparent",
+      width: "50vw",
+      border: "none",
+    },
+    overlay: {
+      zIndex: "100",
+      background: "rgba(45, 45, 45, 0.85)",
+    },
+  };
+
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
   return (
     <div className="h-full w-full relative">
       <HeaderLogged />
@@ -15,13 +47,11 @@ const AdvPage = () => {
             </Link>
           </div>
         </div>
-
         <div className="grid grid-cols-12 gap-10 w-full my-10">
           <div className="col-span-4">
             <div className="flex flex-col items-center justify-between gap-7 w-full">
               <div className="w-full bg-[#F0F0F0] aspect-square" />
-              <div className="w-full flex flex-row items-center justify-between gap-[10px]">
-                <div className="h-[88px] aspect-square bg-[#F0F0F0]" />
+              <div className="w-full flex flex-row items-center justify-between gap-[10px] overflow-hidden">
                 <div className="h-[88px] aspect-square bg-[#F0F0F0]" />
                 <div className="h-[88px] aspect-square bg-[#F0F0F0]" />
                 <div className="h-[88px] aspect-square bg-[#F0F0F0]" />
@@ -29,7 +59,6 @@ const AdvPage = () => {
               </div>
             </div>
           </div>
-
           <div className="col-span-8">
             <div className="flex flex-col items-start gap-8">
               <div className="flex flex-col items-start gap-2">
@@ -43,7 +72,10 @@ const AdvPage = () => {
                   <div className="text-[16px] font-normal text-[#5F5F5F]">
                     Санкт-Петербург
                   </div>
-                  <div className="text-[16px] font-normal text-[#009EE4]">
+                  <div
+                    onClick={openModal}
+                    className="text-[16px] font-normal text-[#009EE4] cursor-pointer"
+                  >
                     23 отзыва
                   </div>
                 </div>
@@ -83,6 +115,14 @@ const AdvPage = () => {
             culpa qui officia deserunt mollit anim id est laborum.
           </div>
         </div>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Reviews Modal"
+        >
+          <ReviewsModal closeModal={closeModal} />
+        </Modal>
       </div>
     </div>
   );
