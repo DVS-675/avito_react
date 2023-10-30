@@ -3,7 +3,9 @@ import HeaderLogged from "../components/Header/HeaderLogged";
 import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
 import Modal from "react-modal";
 import ReviewsModal from "../components/Modals/ReviewsModal";
-import React from "react";
+import React, { useState } from "react";
+import NewAdv from "../components/Modals/NewAdv";
+import UpdateAdv from "../components/Modals/UpdateAdv";
 
 const AdvPage = () => {
   const customStyles = {
@@ -26,21 +28,40 @@ const AdvPage = () => {
   };
 
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [updateModalIsOpen, setUpdateModalIsOpen] = React.useState(false);
+  const [myAdv, setMyAdv] = useState(true);
+  const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+
+  function openAddModal() {
+    setAddModalIsOpen(true);
+  }
+
+  function closeAddModal() {
+    setAddModalIsOpen(false);
+  }
 
   function openModal() {
     setIsOpen(true);
+  }
+
+  function openUpdateModal() {
+    setUpdateModalIsOpen(true);
   }
 
   function closeModal() {
     setIsOpen(false);
   }
 
+  function closeUpdateModal() {
+    setUpdateModalIsOpen(false);
+  }
+
   return (
     <div className="h-full w-full relative">
-      <HeaderLogged />
+      <HeaderLogged openAddModal={openAddModal} />
       <div className="relative px-[140px]">
         <div className="h-[50px] w-full flex flex-row items-center justify-start gap-14 my-10 ">
-          <img src="/img/logo.svg" alt="logo" />
+          <img src="/svg/logo.svg" alt="logo" />
           <div className="w-[241px]">
             <Link to="/">
               <ButtonBlue text="Вернуться на главную" />
@@ -82,10 +103,21 @@ const AdvPage = () => {
               </div>
               <div className="flex flex-col items-start gap-5">
                 <div className="text-[32px] font-bold text-black">2200 ₽</div>
-                <ButtonBlue
-                  text="Показать телефон 8 905 ХХХ ХХ ХХ"
-                  size="big"
-                />
+                {myAdv ? (
+                  <div className="flex flex-row gap-3 items-center">
+                    <div onClick={openUpdateModal}>
+                      <ButtonBlue text="Редактировать" />
+                    </div>
+                    <div>
+                      <ButtonBlue text="Снять с публикации" />
+                    </div>
+                  </div>
+                ) : (
+                  <ButtonBlue
+                    text="Показать телефон 8 905 ХХХ ХХ ХХ"
+                    size="big"
+                  />
+                )}
               </div>
               <div className="flex flex-row items-center gap-4">
                 <div className="w-[40px] h-[40px] rounded-[50%] bg-[#F0F0F0]" />
@@ -122,6 +154,22 @@ const AdvPage = () => {
           contentLabel="Reviews Modal"
         >
           <ReviewsModal closeModal={closeModal} />
+        </Modal>
+        <Modal
+          isOpen={updateModalIsOpen}
+          onRequestClose={closeUpdateModal}
+          style={customStyles}
+          contentLabel="Update adv modal"
+        >
+          <UpdateAdv closeModal={closeUpdateModal} />
+        </Modal>
+        <Modal
+          isOpen={addModalIsOpen}
+          onRequestClose={closeAddModal}
+          style={customStyles}
+          contentLabel="Update adv modal"
+        >
+          <NewAdv closeModal={closeAddModal} />
         </Modal>
       </div>
     </div>

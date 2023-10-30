@@ -39,7 +39,7 @@ const MainPage = () => {
       <Header />
       <div className="relative px-[140px]">
         <div className="h-[50px] w-full flex flex-row items-center justify-between gap-14 my-10 ">
-          <img src="/img/logo.svg" alt="logo" />
+          <img src="/svg/logo.svg" alt="logo" />
           <div className="flex flex-row w-full gap-2">
             <input
               className="border-[1px] border-[#00000033] active:border-[#009EE4] rounded-[6px] w-full flex items-center justify-center px-5 outline-none"

@@ -3,6 +3,9 @@ import AdvertItem from "../components/Advert/AdvertItem";
 import HeaderLogged from "../components/Header/HeaderLogged";
 import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
 import SectionTitle from "../components/UI/SectionTitle/SectionTitle";
+import Modal from "react-modal";
+import NewAdv from "../components/Modals/NewAdv";
+import { useState } from "react";
 
 const SellerPage = () => {
   const data = [
@@ -35,12 +38,41 @@ const SellerPage = () => {
       time: "23.09.2005",
     },
   ];
+
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      height: "90vh",
+      background: "transparent",
+      width: "50vw",
+      border: "none",
+    },
+    overlay: {
+      zIndex: "100",
+      background: "rgba(45, 45, 45, 0.85)",
+    },
+  };
+
+  const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+
+  function openAddModal() {
+    setAddModalIsOpen(true);
+  }
+
+  function closeAddModal() {
+    setAddModalIsOpen(false);
+  }
   return (
     <div className="h-full w-full relative">
-      <HeaderLogged />
+      <HeaderLogged openAddModal={openAddModal} />
       <div className="relative px-[140px]">
         <div className="h-[50px] w-full flex flex-row items-center justify-start gap-14 my-10 ">
-          <img src="/img/logo.svg" alt="logo" />
+          <img src="/svg/logo.svg" alt="logo" />
           <div className="w-[241px]">
             <Link to="/">
               <ButtonBlue text="Вернуться на главную" />
@@ -87,6 +119,14 @@ const SellerPage = () => {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={addModalIsOpen}
+        onRequestClose={closeAddModal}
+        style={customStyles}
+        contentLabel="Update adv modal"
+      >
+        <NewAdv closeModal={closeAddModal} />
+      </Modal>
     </div>
   );
 };
