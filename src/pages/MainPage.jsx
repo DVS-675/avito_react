@@ -2,38 +2,37 @@ import ButtonBlue from "../components/UI/Buttons/ButtonBlue.jsx";
 import Header from "../components/Header/Header.jsx";
 import SectionTitle from "../components/UI/SectionTitle/SectionTitle.jsx";
 import AdvertItem from "../components/Advert/AdvertItem.jsx";
+import { useEffect, useState } from "react";
+import { getAllAds } from "../api.jsx";
+import { getSearchingTracks } from "../helpers/helpers.jsx";
 
 const MainPage = () => {
-  const data = [
-    {
-      index: 1,
-      title: "Ракетка",
-      price: 2200,
-      city: "Санкт-Петербург",
-      time: "23.09.2000",
-    },
-    {
-      index: 2,
-      title: "Мяч",
-      price: 200,
-      city: "Санкт-Петербург",
-      time: "23.09.2005",
-    },
-    {
-      index: 3,
-      title: "Куртка",
-      price: 20000,
-      city: "Тюмень",
-      time: "23.09.2005",
-    },
-    {
-      index: 4,
-      title: "Лыжи",
-      price: 15000,
-      city: "Санкт-Петербург",
-      time: "23.09.2005",
-    },
-  ];
+  const [ads, setAds] = useState();
+  const [filteredAds, setFilteredAds] = useState();
+  const [searchValue, setSearchValue] = useState("");
+
+  const getAds = async () => {
+    const responseData = await getAllAds();
+    setAds(responseData);
+  };
+
+  const HandleFilterAds = () => {
+    let filteredAds = ads;
+
+    if (searchValue) {
+      filteredAds = filteredAds
+        ? getSearchingTracks(filteredAds, searchValue)
+        : null;
+    }
+    setFilteredAds(filteredAds);
+  };
+
+  console.log(filteredAds);
+
+  useEffect(() => {
+    getAds();
+  }, []);
+
   return (
     <div className="h-full w-full relative">
       <Header />
@@ -46,8 +45,9 @@ const MainPage = () => {
               type="search"
               placeholder="Поиск по объявлениям"
               name="search"
+              onInput={(e) => setSearchValue(e.target.value)}
             />
-            <div className="w-[158px]">
+            <div onClick={HandleFilterAds} className="w-[158px]">
               <ButtonBlue text="Найти" />
             </div>
           </div>
@@ -55,11 +55,18 @@ const MainPage = () => {
         <div className="h-full w-full relative">
           <SectionTitle text="Объявления" />
           <div className="flex flex-wrap flex-row gap-7 items-center ">
-            {data.map((item) => (
-              <div key={item.index}>
-                <AdvertItem item={item} />
-              </div>
-            ))}
+            {filteredAds
+              ? filteredAds.map((item) => (
+                  <div key={item.id}>
+                    <AdvertItem item={item} />
+                  </div>
+                ))
+              : ads &&
+                ads.map((item) => (
+                  <div key={item.id}>
+                    <AdvertItem item={item} />
+                  </div>
+                ))}
           </div>
         </div>
       </div>

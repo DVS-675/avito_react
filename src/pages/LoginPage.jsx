@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
 import Button from "../components/UI/Buttons/Button";
 import { loginUser, registerUser } from "../api";
 import { validateEmail } from "../helpers/helpers";
 import { useAllowedContext } from "../contexts/allowed";
+import Cookies from "js-cookie";
+import { saveTokensStorage } from "../helpers/AuthHelpers";
 
 const LoginPage = () => {
   const { isAllowed, setIsAllowed } = useAllowedContext();
   const location = useLocation();
   const path = location.pathname;
   const navigate = useNavigate();
-  const [disabled, setDisabled] = useState(true);
+  const [disabled, setDisabled] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,19 +26,21 @@ const LoginPage = () => {
     try {
       setDisabled(true);
       if (email.split("").length !== 0 && password.split("").length !== 0) {
-        console.log("123");
         if (validateEmail(email)) {
           const responseData = await loginUser(email, password);
 
           if (responseData) {
-            localStorage.setItem("refresh", responseData.refresh_token);
-            setIsAllowed?.(!isAllowed);
+            console.log(responseData);
+            saveTokensStorage(responseData.refresh_token);
+            setIsAllowed(true);
             navigate("/");
           }
         } else {
+          setDisabled(true);
           setError("Введите валидный email");
         }
       } else {
+        setDisabled(true);
         setError("Введите email / пароль");
       }
     } catch (error) {
@@ -77,8 +81,8 @@ const LoginPage = () => {
               const responseData = await loginUser(email, password);
 
               if (responseData) {
-                localStorage.setItem("refresh", responseData.refresh_token);
-                setIsAllowed?.(!isAllowed);
+                saveTokensStorage(responseData.refresh_token);
+                setIsAllowed(true);
                 navigate("/");
               }
             } else {
@@ -101,6 +105,23 @@ const LoginPage = () => {
       setDisabled(false);
     }
   };
+
+  // useEffect(
+  //   () => {
+  //     if (
+  //       email &&
+  //       email.split("").length > 3 &&
+  //       password &&
+  //       password.split("").length > 3
+  //     ) {
+  //       setDisabled(false);
+  //     } else if (email.split("").length < 3 || password.split("").length < 3) {
+  //       setDisabled(true);
+  //     }
+  //   },
+  //   [email],
+  //   [password]
+  // );
 
   return path === "/login" ? (
     <div className="h-full w-full relative bg-[#009ee4] flex items-center justify-center">
@@ -130,7 +151,7 @@ const LoginPage = () => {
 
         <div
           onClick={() => handleLogin(email, password)}
-          className="w-full mb-5"
+          className={`${disabled ? "pointer-events-none" : ""} w-full mb-5`}
         >
           <ButtonBlue text="Войти" disabled={disabled} />
         </div>
@@ -169,19 +190,19 @@ const LoginPage = () => {
           />
           <input
             className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="password"
+            type="text"
             placeholder="Имя (необязательно)"
             onChange={(event) => setName(event.target.value)}
           />
           <input
             className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="password"
+            type="text"
             placeholder="Фамилия (необязательно)"
             onChange={(event) => setSurname(event.target.value)}
           />
           <input
             className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="password"
+            type="text"
             placeholder="Город (необязательно)"
             onChange={(event) => setCity(event.target.value)}
           />

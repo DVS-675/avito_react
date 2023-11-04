@@ -1,5 +1,20 @@
 const PATH = "http://localhost:8090";
 
+//получить все объявления
+
+export async function getAllAds() {
+  const response = await fetch(`${PATH}/ads`, {
+    method: "GET",
+
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData;
+}
+
 export async function loginUser(email, password) {
   const response = await fetch(`${PATH}/auth/login`, {
     method: "POST",

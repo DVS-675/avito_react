@@ -6,6 +6,8 @@ import SectionTitle from "../components/UI/SectionTitle/SectionTitle";
 import NewAdv from "../components/Modals/NewAdv";
 import Modal from "react-modal";
 import { useState } from "react";
+import { delToken } from "../helpers/AuthHelpers";
+import { useAllowedContext } from "../contexts/allowed";
 
 const ProfilePage = () => {
   const data = [
@@ -66,6 +68,12 @@ const ProfilePage = () => {
       background: "rgba(45, 45, 45, 0.85)",
     },
   };
+  const { isAllowed, setIsAllowed } = useAllowedContext();
+
+  const handleLogout = () => {
+    delToken();
+    setIsAllowed(false);
+  };
   return (
     <div className="h-full w-full relative">
       <HeaderLogged openAddModal={openAddModal} />
@@ -75,6 +83,11 @@ const ProfilePage = () => {
           <div className="w-[241px]">
             <Link to="/">
               <ButtonBlue text="Вернуться на главную" />
+            </Link>
+          </div>
+          <div className="w-[150px]">
+            <Link onClick={handleLogout} to="/">
+              <ButtonBlue text="Выйти" />
             </Link>
           </div>
         </div>
