@@ -15,6 +15,78 @@ export async function getAllAds() {
   return responseData;
 }
 
+export async function getAllUsers() {
+  const response = await fetch(`${PATH}/user/all`, {
+    method: "GET",
+
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function getCurrentUserAds() {
+  const response = await fetch(`${PATH}/ads/me`, {
+    method: "GET",
+
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function getAd(ad_id) {
+  const response = await fetch(`${PATH}/ads/${ad_id}`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Ошибка");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function getAdsFeedback(ads_id) {
+  const response = await fetch(`${PATH}/ads/${ads_id}/comments`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Ошибка");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function AddAdsFeedback(ads_id, text, token) {
+  const response = await fetch(`${PATH}/ads/${ads_id}/comments`, {
+    method: "POST",
+    body: JSON.stringify({
+      text: text,
+    }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Ошибка");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+
 export async function loginUser(email, password) {
   const response = await fetch(`${PATH}/auth/login`, {
     method: "POST",

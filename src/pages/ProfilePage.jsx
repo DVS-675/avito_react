@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import AdvertItem from "../components/Advert/AdvertItem";
-import HeaderLogged from "../components/Header/HeaderLogged";
+
 import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
 import SectionTitle from "../components/UI/SectionTitle/SectionTitle";
 import NewAdv from "../components/Modals/NewAdv";
 import Modal from "react-modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { delToken } from "../helpers/AuthHelpers";
 import { useAllowedContext } from "../contexts/allowed";
+import Header from "../components/Header/Header";
+import { getCurrentUserAds } from "../api";
 
 const ProfilePage = () => {
   const data = [
@@ -41,6 +43,20 @@ const ProfilePage = () => {
     },
   ];
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+  const [userAds, setUserAds] = useState();
+  const { isAllowed, setIsAllowed } = useAllowedContext();
+
+  console.log(userAds);
+
+  const handleLogout = () => {
+    delToken();
+    setIsAllowed(false);
+  };
+
+  const getUserAds = async () => {
+    const responseData = await getCurrentUserAds();
+    setUserAds(responseData);
+  };
 
   function openAddModal() {
     setAddModalIsOpen(true);
@@ -49,6 +65,10 @@ const ProfilePage = () => {
   function closeAddModal() {
     setAddModalIsOpen(false);
   }
+
+  useEffect(() => {
+    getUserAds();
+  }, []);
 
   const customStyles = {
     content: {
@@ -68,15 +88,9 @@ const ProfilePage = () => {
       background: "rgba(45, 45, 45, 0.85)",
     },
   };
-  const { isAllowed, setIsAllowed } = useAllowedContext();
-
-  const handleLogout = () => {
-    delToken();
-    setIsAllowed(false);
-  };
   return (
     <div className="h-full w-full relative">
-      <HeaderLogged openAddModal={openAddModal} />
+      <Header openAddModal={openAddModal} />
       <div className="relative px-[140px]">
         <div className="h-[50px] w-full flex flex-row items-center justify-start gap-14 my-10 ">
           <img src="/svg/logo.svg" alt="logo" />
@@ -161,13 +175,13 @@ const ProfilePage = () => {
           <div className="text-[32px] font-medium text-black pb-5">
             Мои товары
           </div>
-          <div className="flex flex-wrap flex-row gap-7 items-center ">
-            {data.map((item) => (
+          {/* <div className="flex flex-wrap flex-row gap-7 items-center ">
+            {userAds.map((item) => (
               <div key={item.index}>
                 <AdvertItem item={item} />
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
       <Modal

@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 
 import ButtonBlue from "../UI/Buttons/ButtonBlue";
+import { useParams } from "react-router";
+import { AddAdsFeedback } from "../../api";
+import Cookies from "js-cookie";
 
-const ReviewsModal = ({ closeModal }) => {
+const ReviewsModal = ({ closeModal, data, adsFeedback }) => {
   const [disabled, setDisabled] = useState(true);
   const [review, setReview] = useState("");
+  const { id } = useParams();
+  console.log(id);
+
+  const token = Cookies.get("accessToken");
 
   useEffect(() => {
     if (review.split("").length > 3) {
@@ -14,32 +21,11 @@ const ReviewsModal = ({ closeModal }) => {
     }
   }, [review]);
 
-  const reviews = [
-    {
-      photo: "",
-      name: "dima",
-      review:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti voluptatibus dolorem dolor deserunt, vero pariatur atque labore magnam nobis. Voluptatibus.",
-    },
-    {
-      photo: "",
-      name: "sasha",
-      review:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti voluptatibus dolorem dolor deserunt, vero pariatur atque labore magnam nobis. Voluptatibus.",
-    },
-    {
-      photo: "",
-      name: "dima",
-      review:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti voluptatibus dolorem dolor deserunt, vero pariatur atque labore magnam nobis. Voluptatibus.",
-    },
-    {
-      photo: "",
-      name: "dima",
-      review:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti voluptatibus dolorem dolor deserunt, vero pariatur atque labore magnam nobis. Voluptatibus.",
-    },
-  ];
+  const handleAddReview = async () => {
+    await AddAdsFeedback(id, review, token);
+    adsFeedback();
+  };
+
   return (
     <div className="relative flex justify-center items-center w-full h-full">
       <div className="h-full w-full bg-white px-[50px] py-[20px] overflow-y-auto rounded-[12px] ">
@@ -60,22 +46,24 @@ const ReviewsModal = ({ closeModal }) => {
               name="review"
               onChange={(event) => setReview(event.target.value)}
             />
-            <div className="w-[181px]">
+            <div onClick={handleAddReview} className="w-[181px]">
               <ButtonBlue text="Опубликовать" disabled={disabled} />
             </div>
           </div>
           <div className="flex flex-col items-start gap-7">
-            {reviews.map((item) => (
+            {data.map((item) => (
               <div
-                key={item.name}
+                key={item.id}
                 className="flex flex-row items-start justify-start gap-3"
               >
                 <div className="aspect-square w-[60px] rounded-[50%] bg-[#F0F0F0]" />
                 <div className="flex flex-col items-start ">
-                  <p className="text-[16px] font-[600] mb-3">{item.name}</p>
+                  <p className="text-[16px] font-[600] mb-3">
+                    {item.author.name}
+                  </p>
 
-                  <p className="text-[16px] font-normal mb-1">Комментарий</p>
-                  <p className="text-[16px] font-normal mb-1">{item.review}</p>
+                  <p className="text-[16px] font-[600] mb-1">Комментарий</p>
+                  <p className="text-[16px] font-normal mb-1">{item.text}</p>
                 </div>
               </div>
             ))}

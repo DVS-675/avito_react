@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AdvertItem from "../components/Advert/AdvertItem";
-import HeaderLogged from "../components/Header/HeaderLogged";
 import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
 import SectionTitle from "../components/UI/SectionTitle/SectionTitle";
 import Modal from "react-modal";
 import NewAdv from "../components/Modals/NewAdv";
 import { useState } from "react";
+import { getAllUsers } from "../api";
+import Header from "../components/Header/Header";
 
 const SellerPage = () => {
   const data = [
@@ -59,6 +60,9 @@ const SellerPage = () => {
   };
 
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+  const { id } = useParams();
+  console.log(id);
+  const [users, setUsers] = useState();
 
   function openAddModal() {
     setAddModalIsOpen(true);
@@ -67,9 +71,20 @@ const SellerPage = () => {
   function closeAddModal() {
     setAddModalIsOpen(false);
   }
+
+  const getUsers = async () => {
+    const responseData = await getAllUsers();
+    setUsers(responseData);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  console.log(users);
   return (
     <div className="h-full w-full relative">
-      <HeaderLogged openAddModal={openAddModal} />
+      <Header openAddModal={openAddModal} />
       <div className="relative px-[140px]">
         <div className="h-[50px] w-full flex flex-row items-center justify-start gap-14 my-10 ">
           <img src="/svg/logo.svg" alt="logo" />
@@ -110,13 +125,13 @@ const SellerPage = () => {
           <div className="text-[32px] font-medium text-black pb-5">
             Товары продавца
           </div>
-          <div className="flex flex-wrap flex-row gap-7 items-center ">
+          {/* <div className="flex flex-wrap flex-row gap-7 items-center ">
             {data.map((item) => (
               <div key={item.index}>
                 <AdvertItem item={item} />
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
       <Modal

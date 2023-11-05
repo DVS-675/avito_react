@@ -14,8 +14,8 @@ function AppRoutes({ isAllowed }) {
         element={<ProtectedRoute redirectPath="/login" isAllowed={isAllowed} />}
       >
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/advertisement" element={<AdvPage />} />
-        <Route path="/sellerProfile" element={<SellerPage />} />
+        <Route path="/advertisement/:id" element={<AdvPage />} />
+        <Route path="/sellerProfile/:id" element={<SellerPage />} />
       </Route>
       <Route path="/" element={<MainPage />} />
       <Route path="/login" element={<LoginPage />} />

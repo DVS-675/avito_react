@@ -1,3 +1,11 @@
+import {
+  formatDistance,
+  formatDistanceToNow,
+  formatRelative,
+  subDays,
+} from "date-fns";
+import { ru } from "date-fns/locale";
+
 const AdvertItem = ({ item }) => {
   var options = {
     year: "numeric",
@@ -25,7 +33,9 @@ const AdvertItem = ({ item }) => {
       <p className="text-black font-bold text-[22px]">{`${item.price} ₽`}</p>
       <p className="text-[#5F5F5F] font-normal text-[16px]">{item.user.city}</p>
       <p className="text-[#5F5F5F] font-normal text-[16px]">
-        {new Date(item.created_on).toLocaleDateString("ru", options)}
+        {formatDistance(new Date(item.created_on), new Date(), {
+          locale: ru,
+        })}
       </p>
     </div>
   );
