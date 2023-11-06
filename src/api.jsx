@@ -18,21 +18,17 @@ export async function getAllAds() {
 export async function getAllUsers() {
   const response = await fetch(`${PATH}/user/all`, {
     method: "GET",
-
-    headers: {
-      "content-type": "application/json",
-    },
   });
 
   const responseData = await response.json();
   return responseData;
 }
 
-export async function getCurrentUserAds() {
+export async function getCurrentUserAds(token) {
   const response = await fetch(`${PATH}/ads/me`, {
     method: "GET",
-
     headers: {
+      Authorization: `Bearer ${token}`,
       "content-type": "application/json",
     },
   });

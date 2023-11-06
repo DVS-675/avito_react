@@ -6,42 +6,12 @@ import SectionTitle from "../components/UI/SectionTitle/SectionTitle";
 import NewAdv from "../components/Modals/NewAdv";
 import Modal from "react-modal";
 import { useEffect, useState } from "react";
-import { delToken } from "../helpers/AuthHelpers";
+import { delToken, getAccessToken } from "../helpers/AuthHelpers";
 import { useAllowedContext } from "../contexts/allowed";
 import Header from "../components/Header/Header";
 import { getCurrentUserAds } from "../api";
 
 const ProfilePage = () => {
-  const data = [
-    {
-      index: 1,
-      title: "Ракетка",
-      price: 2200,
-      city: "Санкт-Петербург",
-      time: "23.09.2000",
-    },
-    {
-      index: 2,
-      title: "Мяч",
-      price: 200,
-      city: "Санкт-Петербург",
-      time: "23.09.2005",
-    },
-    {
-      index: 3,
-      title: "Куртка",
-      price: 20000,
-      city: "Тюмень",
-      time: "23.09.2005",
-    },
-    {
-      index: 4,
-      title: "Лыжи",
-      price: 15000,
-      city: "Санкт-Петербург",
-      time: "23.09.2005",
-    },
-  ];
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [userAds, setUserAds] = useState();
   const { isAllowed, setIsAllowed } = useAllowedContext();
@@ -53,8 +23,10 @@ const ProfilePage = () => {
     setIsAllowed(false);
   };
 
+  const token = getAccessToken();
+
   const getUserAds = async () => {
-    const responseData = await getCurrentUserAds();
+    const responseData = await getCurrentUserAds(token);
     setUserAds(responseData);
   };
 

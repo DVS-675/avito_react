@@ -14,6 +14,7 @@ const MainPage = () => {
   const [filteredAds, setFilteredAds] = useState();
   const [searchValue, setSearchValue] = useState("");
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
+ 
 
   function openAddModal() {
     setAddModalIsOpen(true);

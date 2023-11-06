@@ -11,6 +11,8 @@ import { formatDistance } from "date-fns";
 import { ru } from "date-fns/locale";
 import Header from "../components/Header/Header";
 
+import ButtonNumber from "../components/UI/Buttons/ButtonNumber";
+
 const AdvPage = () => {
   const customStyles = {
     content: {
@@ -37,6 +39,8 @@ const AdvPage = () => {
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [feedback, setFeedback] = useState();
   const [ad, setAd] = useState();
+  const [showPhone, setShowPhone] = useState(false);
+  const PATH = "http://localhost:8090";
 
   const adsFeedback = async () => {
     const feedback = await getAdsFeedback(id);
@@ -97,8 +101,6 @@ const AdvPage = () => {
     "ноября",
     "декабря",
   ];
-
-  console.log(feedback);
 
   return (
     <div className="h-full w-full relative">
@@ -166,15 +168,14 @@ const AdvPage = () => {
                       </div>
                     </div>
                   ) : (
-                    <ButtonBlue
-                      text="Показать телефон 8 905 ХХХ ХХ ХХ"
-                      size="big"
-                    />
+                    <div>{ad && <ButtonNumber phone={ad.user.phone} />}</div>
                   )}
                 </div>
-                <Link to={`/sellerPage/${ad.user_id}`}>
+                <Link to={`/sellerProfile/${ad.user_id}`}>
                   <div className="flex flex-row items-center gap-4">
-                    <div className="w-[40px] h-[40px] rounded-[50%] bg-[#F0F0F0]" />
+                    <div className="w-[40px] h-[40px] rounded-[50%] bg-[#F0F0F0]">
+                      <img src={`${PATH}/${ad.user.avatar}`} alt="avatar" />
+                    </div>
                     <div className="flex flex-col items-start ">
                       <div className="text-[20px] font-semibold text-[#009EE4]">
                         {ad.user.name}
@@ -210,7 +211,11 @@ const AdvPage = () => {
             style={customStyles}
             contentLabel="Reviews Modal"
           >
-            <ReviewsModal closeModal={closeReviewsModal} data={feedback} adsFeedback={adsFeedback} />
+            <ReviewsModal
+              closeModal={closeReviewsModal}
+              data={feedback}
+              adsFeedback={adsFeedback}
+            />
           </Modal>
           <Modal
             isOpen={updateModalIsOpen}

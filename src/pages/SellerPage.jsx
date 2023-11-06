@@ -4,42 +4,12 @@ import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
 import SectionTitle from "../components/UI/SectionTitle/SectionTitle";
 import Modal from "react-modal";
 import NewAdv from "../components/Modals/NewAdv";
-import { useState } from "react";
-import { getAllUsers } from "../api";
+import { useEffect, useState } from "react";
+import { getAllAds, getAllUsers } from "../api";
 import Header from "../components/Header/Header";
+import NumberButton from "../components/UI/Buttons/ButtonNumber";
 
 const SellerPage = () => {
-  const data = [
-    {
-      index: 1,
-      title: "Ракетка",
-      price: 2200,
-      city: "Санкт-Петербург",
-      time: "23.09.2000",
-    },
-    {
-      index: 2,
-      title: "Мяч",
-      price: 200,
-      city: "Санкт-Петербург",
-      time: "23.09.2005",
-    },
-    {
-      index: 3,
-      title: "Куртка",
-      price: 20000,
-      city: "Тюмень",
-      time: "23.09.2005",
-    },
-    {
-      index: 4,
-      title: "Лыжи",
-      price: 15000,
-      city: "Санкт-Петербург",
-      time: "23.09.2005",
-    },
-  ];
-
   const customStyles = {
     content: {
       top: "50%",
@@ -58,11 +28,42 @@ const SellerPage = () => {
       background: "rgba(45, 45, 45, 0.85)",
     },
   };
+  const months = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря",
+  ];
 
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const { id } = useParams();
   console.log(id);
   const [users, setUsers] = useState();
+  const [currentUser, setCurrentUser] = useState();
+  const [ads, setAds] = useState();
+  const [userAds, setUserAds] = useState([]);
+  const PATH = "http://localhost:8090";
+
+  const getAds = async () => {
+    const responseData = await getAllAds();
+    setAds(responseData);
+  };
+
+  const handleUserAds = () => {
+    console.log(ads);
+    if (ads) {
+      const result = ads.filter((ad) => ad.user_id == currentUser.id);
+      setUserAds(result);
+    }
+  };
 
   function openAddModal() {
     setAddModalIsOpen(true);
@@ -77,11 +78,29 @@ const SellerPage = () => {
     setUsers(responseData);
   };
 
+  const handleCurrentUser = () => {
+    if (users) {
+      users.map((item) => {
+        item.id == id ? setCurrentUser(item) : "";
+      });
+    }
+  };
+
   useEffect(() => {
     getUsers();
+    getAds();
   }, []);
 
-  console.log(users);
+  useEffect(() => {
+    handleCurrentUser();
+  }, [users]);
+
+  useEffect(() => {
+    handleUserAds();
+  }, [currentUser]);
+
+  console.log(userAds);
+
   return (
     <div className="h-full w-full relative">
       <Header openAddModal={openAddModal} />
@@ -98,40 +117,45 @@ const SellerPage = () => {
           <SectionTitle text="Профиль продавца" />
           <div className="flex flex-col items-start justify-between mb-[70px]">
             <div className="flex flex-row items-start gap-12">
-              <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0]" />
-
-              <div className="flex flex-col items-start gap-8">
-                <div className="flex flex-col items-start gap-2">
-                  <div className="text-[20px] font-[600] text-black">
-                    Кирилл Матвеев
-                  </div>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[16px] font-normal text-[#5F5F5F]">
-                      Санкт-Петербург
-                    </div>
-                    <div className="text-[16px] font-normal text-[#5F5F5F]">
-                      Продает товары с августа 2021
-                    </div>
-                  </div>
+              {currentUser && currentUser.avatar ? (
+                <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0]">
+                  <img src={`${PATH}/${currentUser.avatar}`} alt="avatar" />
                 </div>
-
-                <ButtonBlue
-                  text="Показать телефон 8 905 ХХХ ХХ ХХ"
-                  size="big"
-                />
-              </div>
+              ) : (
+                <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0]"></div>
+              )}
+              {currentUser && (
+                <div className="flex flex-col items-start gap-8">
+                  <div className="flex flex-col items-start gap-2">
+                    <div className="text-[20px] font-[600] text-black">
+                      {`${currentUser.name} ${currentUser.surname}`}
+                    </div>
+                    <div className="flex flex-col items-start gap-1">
+                      <div className="text-[16px] font-normal text-[#5F5F5F]">
+                        {currentUser.city}
+                      </div>
+                      <div className="text-[16px] font-normal text-[#5F5F5F]">
+                        {`Продает товары с ${
+                          months[new Date(currentUser.sells_from).getMonth()]
+                        } ${new Date(currentUser.sells_from).getFullYear()}`}
+                      </div>
+                    </div>
+                  </div>
+                  <NumberButton phone={currentUser.phone} />
+                </div>
+              )}
             </div>
           </div>
           <div className="text-[32px] font-medium text-black pb-5">
             Товары продавца
           </div>
-          {/* <div className="flex flex-wrap flex-row gap-7 items-center ">
-            {data.map((item) => (
+          <div className="flex flex-wrap flex-row gap-7 items-center ">
+            {userAds.map((item) => (
               <div key={item.index}>
                 <AdvertItem item={item} />
               </div>
             ))}
-          </div> */}
+          </div>
         </div>
       </div>
       <Modal
