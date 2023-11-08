@@ -24,9 +24,40 @@ export async function getAllUsers() {
   return responseData;
 }
 
+export async function getCurrentUser(token) {
+  const response = await fetch(`${PATH}/user`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+  });
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function changeCurrentUser(token, name, surname, phone, city) {
+  const response = await fetch(`${PATH}/user`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      name: name,
+      surname: surname,
+      phone: phone,
+      city: city,
+    }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+  });
+  const responseData = await response.json();
+  return responseData;
+}
+
 export async function getCurrentUserAds(token) {
   const response = await fetch(`${PATH}/ads/me`, {
     method: "GET",
+
     headers: {
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",

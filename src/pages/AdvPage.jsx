@@ -39,6 +39,7 @@ const AdvPage = () => {
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [feedback, setFeedback] = useState();
   const [ad, setAd] = useState();
+
   const [showPhone, setShowPhone] = useState(false);
   const PATH = "http://localhost:8090";
 
@@ -49,7 +50,6 @@ const AdvPage = () => {
 
   const currentAd = async () => {
     const ad = await getAd(id);
-
     setAd(ad);
   };
 
@@ -86,7 +86,6 @@ const AdvPage = () => {
     adsFeedback();
   }, [ad]);
 
-  console.log(ad);
   const months = [
     "января",
     "февраля",
@@ -115,16 +114,38 @@ const AdvPage = () => {
               </Link>
             </div>
           </div>
-          <div className="grid grid-cols-12 gap-10 w-full my-10">
+          <div className="grid grid-cols-12 gap-20 w-full my-10">
             <div className="col-span-4">
               <div className="flex flex-col items-center justify-between gap-7 w-full">
-                <div className="w-full bg-[#F0F0F0] aspect-square" />
-                <div className="w-full flex flex-row items-center justify-between gap-[10px] overflow-hidden">
-                  <div className="h-[88px] aspect-square bg-[#F0F0F0]" />
-                  <div className="h-[88px] aspect-square bg-[#F0F0F0]" />
-                  <div className="h-[88px] aspect-square bg-[#F0F0F0]" />
-                  <div className="h-[88px] aspect-square bg-[#F0F0F0]" />
+                <div className="w-full h-full aspect-square">
+                  {ad.images[0]?.url ? (
+                    <img
+                      className="object-cover h-full w-full"
+                      src={`${PATH}/${ad.images[0].url}`}
+                      alt="image"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      Изображение отсутствует
+                    </div>
+                  )}
                 </div>
+                {ad.images && (
+                  <div className="w-full grid grid-cols-4 gap-[5px] h-[90px]">
+                    {ad.images.map((image) => (
+                      <div
+                        className=" aspect-square col-span-1"
+                        key={image?.ad_id}
+                      >
+                        <img
+                          className="object-cover h-full w-full"
+                          src={`${PATH}/${image?.url}`}
+                          alt="image"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-span-8">

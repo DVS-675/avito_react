@@ -6,11 +6,15 @@ const AdvertItem = ({ item }) => {
 
   return (
     <div className="flex flex-col h-[450px] w-[270px] gap-1 cursor-pointer relative">
-      {item && (
+      {item && item.images && (
         <>
           <div className="h-[270px] w-full bg-[#F0F0F0]">
             {item.images[0]?.url ? (
-              <img src={`${PATH}/${item.images[0].url}`} alt="image" />
+              <img
+                className="object-cover h-full w-full"
+                src={`${PATH}/${item.images[0].url}`}
+                alt="image"
+              />
             ) : (
               <div className="flex items-center justify-center h-full">
                 Изображение отсутствует

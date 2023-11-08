@@ -9,12 +9,17 @@ import { useEffect, useState } from "react";
 import { delToken, getAccessToken } from "../helpers/AuthHelpers";
 import { useAllowedContext } from "../contexts/allowed";
 import Header from "../components/Header/Header";
-import { getCurrentUserAds } from "../api";
+import { changeCurrentUser, getCurrentUser, getCurrentUserAds } from "../api";
 
 const ProfilePage = () => {
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [userAds, setUserAds] = useState();
   const { isAllowed, setIsAllowed } = useAllowedContext();
+  const [user, setUser] = useState();
+  const [name, setName] = useState();
+  const [surname, setSurname] = useState();
+  const [city, setCity] = useState();
+  const [phone, setPhone] = useState();
 
   console.log(userAds);
 
@@ -30,6 +35,22 @@ const ProfilePage = () => {
     setUserAds(responseData);
   };
 
+  const getUser = async () => {
+    const responseData = await getCurrentUser(token);
+    setUser(responseData);
+  };
+
+  const updateUser = async () => {
+    const responseData = await changeCurrentUser(
+      token,
+      name,
+      surname,
+      phone,
+      city
+    );
+    setUser(responseData);
+  };
+
   function openAddModal() {
     setAddModalIsOpen(true);
   }
@@ -40,7 +61,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     getUserAds();
+    getUser();
   }, []);
+
+  console.log(user);
 
   const customStyles = {
     content: {
@@ -66,15 +90,17 @@ const ProfilePage = () => {
       <div className="relative px-[140px]">
         <div className="h-[50px] w-full flex flex-row items-center justify-start gap-14 my-10 ">
           <img src="/svg/logo.svg" alt="logo" />
-          <div className="w-[241px]">
-            <Link to="/">
-              <ButtonBlue text="Вернуться на главную" />
-            </Link>
-          </div>
-          <div className="w-[150px]">
-            <Link onClick={handleLogout} to="/">
-              <ButtonBlue text="Выйти" />
-            </Link>
+          <div className="flex flex-row items-center gap-4">
+            <div className="w-[241px]">
+              <Link to="/">
+                <ButtonBlue text="Вернуться на главную" />
+              </Link>
+            </div>
+            <div className="w-[150px]">
+              <Link onClick={handleLogout} to="/">
+                <ButtonBlue text="Выйти" />
+              </Link>
+            </div>
           </div>
         </div>
         <div className="h-full w-full relative">
@@ -97,8 +123,12 @@ const ProfilePage = () => {
                     <input
                       className="h-[50px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] w-full flex items-center justify-center px-5 outline-none"
                       type="text"
-                      placeholder="Введите имя"
+                      placeholder={
+                        user && user.name ? user.name : "Введите имя"
+                      }
                       name="name"
+                      value={name ? name : ""}
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col items-start gap-1 w-full input">
@@ -106,8 +136,12 @@ const ProfilePage = () => {
                     <input
                       className="h-[50px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] w-full flex items-center justify-center px-5 outline-none"
                       type="text"
-                      placeholder="Введите фамилию"
+                      placeholder={
+                        user && user.surname ? user.surname : "Введите фамилию"
+                      }
+                      value={surname ? surname : ""}
                       name="surname"
+                      onChange={(e) => setSurname(e.target.value)}
                     />
                   </div>
                 </div>
@@ -117,8 +151,12 @@ const ProfilePage = () => {
                     <input
                       className="h-[50px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] w-full flex items-center justify-center px-5 outline-none"
                       type="text"
-                      placeholder="Введите город"
+                      placeholder={
+                        user && user.city ? user.city : "Введите город"
+                      }
+                      value={city ? city : ""}
                       name="city"
+                      onChange={(e) => setCity(e.target.value)}
                     />
                   </div>
                   <div className="w-full" />
@@ -134,11 +172,13 @@ const ProfilePage = () => {
                     mask="+7 (999) 999-99-99"
                     className="h-[50px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] w-full flex items-center justify-center px-5 outline-none"
                     type="tel"
-                    placeholder="+7"
+                    placeholder={user && user.phone ? user.phone : "+7"}
+                    value={phone ? phone : ""}
                     name="phone"
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
-                <div className="w-[154px]">
+                <div onClick={() => updateUser()} className="w-[154px]">
                   <ButtonBlue text="Сохранить" />
                 </div>
               </div>
