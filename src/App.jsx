@@ -6,9 +6,9 @@ import Cookies from "js-cookie";
 
 function App() {
   const [isAllowed, setIsAllowed] = useState(getAccessToken() ? true : false);
-  
+
   return (
-    <div className="max-w-[100vw] h-[100vh]">
+    <div className="max-w-[100vw] h-full">
       <AllowedContext.Provider value={{ isAllowed, setIsAllowed }}>
         <AppRoutes isAllowed={isAllowed} />
       </AllowedContext.Provider>

@@ -102,7 +102,7 @@ const SellerPage = () => {
   console.log(userAds);
 
   return (
-    <div className="h-full w-full relative">
+    <div className="h-full w-full relative pb-[100px]">
       <Header openAddModal={openAddModal} />
       <div className="relative px-[140px]">
         <div className="h-[50px] w-full flex flex-row items-center justify-start gap-14 my-10 ">
@@ -152,7 +152,9 @@ const SellerPage = () => {
           <div className="flex flex-wrap flex-row gap-7 items-center ">
             {userAds.map((item) => (
               <div key={item.index}>
-                <AdvertItem item={item} />
+                <Link to={`/advertisement/${item.id}`}>
+                  <AdvertItem item={item} />
+                </Link>
               </div>
             ))}
           </div>
