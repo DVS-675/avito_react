@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import ButtonBlue from "../UI/Buttons/ButtonBlue";
+import Cookies from "js-cookie";
+import { AddNewAd } from "../../api";
 
 const NewAdv = ({ closeModal }) => {
   const [disabled, setDisabled] = useState(true);
@@ -7,6 +9,17 @@ const NewAdv = ({ closeModal }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(null);
+  const [added, setAdded] = useState(false);
+  const token = Cookies.get("accessToken");
+
+  const newAd = async () => {
+    await AddNewAd(token, title, description, Number(price));
+    setAdded(true);
+  };
+
+  console.log(title);
+  console.log(description);
+  console.log(price);
 
   useEffect(
     () => {
@@ -85,9 +98,18 @@ const NewAdv = ({ closeModal }) => {
               name="price"
               onChange={(event) => setPrice(event.target.value)}
             />
-            <div className="w-[181px]">
-              <ButtonBlue text="Опубликовать" disabled={disabled} />
-            </div>
+            {added ? (
+              <div
+                onClick={() => newAd()}
+                className="w-full flex items-center justify-center"
+              >
+                <p>Объявление добавлено!</p>
+              </div>
+            ) : (
+              <div onClick={() => newAd()} className="w-[181px]">
+                <ButtonBlue text="Опубликовать" disabled={disabled} />
+              </div>
+            )}
           </div>
         </div>
       </div>

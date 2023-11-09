@@ -94,6 +94,28 @@ export async function getAdsFeedback(ads_id) {
   return responseData;
 }
 
+export async function AddNewAd(token, title, description, price) {
+  const response = await fetch(`${PATH}/adstext`, {
+    method: "POST",
+    body: JSON.stringify({
+      title: title,
+      description: description,
+      price: price,
+    }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Ошибка");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+
 export async function AddAdsFeedback(ads_id, text, token) {
   const response = await fetch(`${PATH}/ads/${ads_id}/comments`, {
     method: "POST",

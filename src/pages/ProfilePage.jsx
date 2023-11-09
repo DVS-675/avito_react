@@ -187,13 +187,14 @@ const ProfilePage = () => {
           <div className="text-[32px] font-medium text-black pb-5">
             Мои товары
           </div>
-          {/* <div className="flex flex-wrap flex-row gap-7 items-center ">
-            {userAds.map((item) => (
-              <div key={item.index}>
-                <AdvertItem item={item} />
-              </div>
-            ))}
-          </div> */}
+          <div className="flex flex-wrap flex-row gap-7 items-center ">
+            {userAds &&
+              userAds.map((item) => (
+                <div key={item.index}>
+                  <AdvertItem item={item} />
+                </div>
+              ))}
+          </div>
         </div>
       </div>
       <Modal

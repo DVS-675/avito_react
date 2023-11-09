@@ -9,17 +9,17 @@ const Header = ({ openAddModal }) => {
       <div className="container flex flex-row items-center justify-end gap-2">
         {isAllowed ? (
           <>
-            <div onClick={openAddModal} className="w-[232px]">
+            <div onClick={openAddModal}>
               <Button text="Разместить объявление" />
             </div>
-            <div className="w-[173px]">
+            <div>
               <Link to="/profile">
                 <Button text="Личный кабинет" />
               </Link>
             </div>
           </>
         ) : (
-          <div className="w-[224px]">
+          <div>
             <Link to="/login">
               <Button text="Вход в личный кабинет" />
             </Link>

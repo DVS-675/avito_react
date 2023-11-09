@@ -124,7 +124,7 @@ const LoginPage = () => {
   // );
 
   return path === "/login" ? (
-    <div className="h-full w-full relative bg-[#009ee4] flex items-center justify-center">
+    <div className="h-[100vh] w-full relative bg-[#009ee4] flex items-center justify-center">
       <div className="w-[366px] rounded-[12px] bg-white p-10 flex flex-col items-center ">
         <img src="/svg/logo_text.svg" alt="logo" />
         <div className="flex flex-col items-center w-full py-10 gap-8 relative">
@@ -166,7 +166,7 @@ const LoginPage = () => {
       </div>
     </div>
   ) : (
-    <div className="h-full w-full relative bg-[#009ee4] flex items-center justify-center">
+    <div className="h-[100vh] w-full relative bg-[#009ee4] flex items-center justify-center">
       <div className="w-[366px] rounded-[12px] bg-white p-10 flex flex-col items-center ">
         <img src="/svg/logo_text.svg" alt="logo" />
         <div className="flex flex-col items-center w-full py-10 gap-8 relative">

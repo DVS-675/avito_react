@@ -28,9 +28,9 @@ const AdvertItem = ({ item }) => {
             {item.user.city}
           </p>
           <p className="text-[#5F5F5F] font-normal text-[16px]">
-            {formatDistance(new Date(item.created_on), new Date(), {
+            {`${formatDistance(new Date(item.created_on), new Date(), {
               locale: ru,
-            })}
+            })} назад`}
           </p>
         </>
       )}

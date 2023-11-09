@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-
+import LightGallery from "lightgallery/react";
 import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
 import Modal from "react-modal";
 import ReviewsModal from "../components/Modals/ReviewsModal";
@@ -119,33 +119,35 @@ const AdvPage = () => {
               <div className="flex flex-col items-center justify-between gap-7 w-full">
                 <div className="w-full h-full aspect-square">
                   {ad.images[0]?.url ? (
-                    <img
-                      className="object-cover h-full w-full"
-                      src={`${PATH}/${ad.images[0].url}`}
-                      alt="image"
-                    />
+                    <LightGallery>
+                      <img
+                        className="object-cover h-full w-full"
+                        src={`${PATH}/${ad.images[0].url}`}
+                        alt="image"
+                      />
+                    </LightGallery>
                   ) : (
                     <div className="flex items-center justify-center h-full">
                       Изображение отсутствует
                     </div>
                   )}
                 </div>
-                {ad.images && (
-                  <div className="w-full grid grid-cols-4 gap-[5px] h-[90px]">
-                    {ad.images.map((image) => (
-                      <div
-                        className=" aspect-square col-span-1"
-                        key={image?.ad_id}
-                      >
+                <div className="w-full grid grid-cols-5 gap-[3px] h-[80px]">
+                  {ad.images.map((image) => (
+                    <div
+                      className="col-span-1 h-full w-full"
+                      key={image?.ad_id}
+                    >
+                      <LightGallery>
                         <img
                           className="object-cover h-full w-full"
                           src={`${PATH}/${image?.url}`}
                           alt="image"
                         />
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      </LightGallery>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="col-span-8">
@@ -189,13 +191,25 @@ const AdvPage = () => {
                       </div>
                     </div>
                   ) : (
-                    <div>{ad && <ButtonNumber phone={ad.user.phone} />}</div>
+                    <div>
+                      {ad && ad.user.phone && (
+                        <ButtonNumber phone={ad.user.phone} />
+                      )}
+                    </div>
                   )}
                 </div>
                 <Link to={`/sellerProfile/${ad.user_id}`}>
                   <div className="flex flex-row items-center gap-4">
                     <div className="w-[40px] h-[40px] rounded-[50%] bg-[#F0F0F0]">
-                      <img src={`${PATH}/${ad.user.avatar}`} alt="avatar" />
+                      {ad.user.avatar ? (
+                        <img src={`${PATH}/${ad.user.avatar}`} alt="avatar" />
+                      ) : (
+                        <img
+                          className=""
+                          src={"/img/noprofile.png"}
+                          alt="avatar"
+                        />
+                      )}
                     </div>
                     <div className="flex flex-col items-start ">
                       <div className="text-[20px] font-semibold text-[#009EE4]">
@@ -250,7 +264,7 @@ const AdvPage = () => {
             isOpen={addModalIsOpen}
             onRequestClose={closeAddModal}
             style={customStyles}
-            contentLabel="Update adv modal"
+            contentLabel="New adv modal"
           >
             <NewAdv closeModal={closeAddModal} />
           </Modal>
