@@ -132,6 +132,34 @@ export async function updateAd(ad_id, token, title, description, price) {
   return responseData;
 }
 
+export async function updateAdImages(ad_id, formData, token) {
+  const response = await fetch(`${PATH}/ads/${ad_id}/image`, {
+    method: "POST",
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function deleteAdImage(ad_id, file_url, token) {
+  const response = await fetch(
+    `${PATH}/ads/${ad_id}/image/?${new URLSearchParams({
+      file_url: file_url,
+    })}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const responseData = await response.json();
+  return responseData;
+}
+
 export async function getAdsFeedback(ads_id) {
   const response = await fetch(`${PATH}/ads/${ads_id}/comments`, {
     method: "GET",

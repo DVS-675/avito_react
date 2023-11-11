@@ -41,14 +41,11 @@ const AdvPage = () => {
   const [feedback, setFeedback] = useState();
   const [ad, setAd] = useState();
   const [deletedAdd, setDeletedAdd] = useState(false);
-
   const PATH = "http://localhost:8090";
-
   const token = Cookies.get("accessToken");
 
   const adsFeedback = async () => {
     const feedback = await getAdsFeedback(id);
-
     setFeedback(feedback);
   };
 
@@ -147,7 +144,7 @@ const AdvPage = () => {
                     </div>
                   )}
                 </div>
-                <div className="w-full grid grid-cols-5 gap-[3px] h-[80px]">
+                <div className="w-full grid grid-cols-5 gap-[3px] h-[80px] overflow-hidden">
                   {ad.images.map((image) => (
                     <div
                       className="col-span-1 h-full w-full"

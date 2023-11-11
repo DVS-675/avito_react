@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ButtonBlue from "../UI/Buttons/ButtonBlue";
-import { updateAd } from "../../api";
+import { deleteAdImage, updateAd, updateAdImages } from "../../api";
 import Cookies from "js-cookie";
 
 const UpdateAdv = ({ closeModal, ad, currentAd }) => {
@@ -8,12 +8,30 @@ const UpdateAdv = ({ closeModal, ad, currentAd }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(null);
+  const PATH = "http://localhost:8090";
 
   const token = Cookies.get("accessToken");
 
   const handleUpdateAdd = async () => {
     await updateAd(ad.id, token, title, description, price);
     closeModal();
+    currentAd();
+  };
+
+  const handleUploadAdImg = async (event) => {
+    let selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      await updateAdImages(ad.id, formData, token);
+      currentAd();
+    }
+  };
+
+  const handleDeleteImg = async (image) => {
+    const file_url = image.url;
+    console.log(image.url);
+    await deleteAdImage(ad.id, file_url, token);
     currentAd();
   };
 
@@ -73,17 +91,52 @@ const UpdateAdv = ({ closeModal, ad, currentAd }) => {
                   не более 5 фотографий
                 </p>
               </div>
-              <div className="w-full flex flex-row items-center gap-2">
-                <div className="w-[90px] h-[90px] bg-[#F0F0F0] relative cursor-pointer">
-                  <div className="absolute z-10 top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] stroke-black">
-                    <img src="/svg/plus.svg" alt="закрыть" />
+              <div className="w-full">
+                {ad && ad.images ? (
+                  <div className="w-full flex flex-row items-center gap-2">
+                    {ad.images.map((image) => (
+                      <label
+                        className="w-[90px] h-[90px] relative cursor-pointer border-[1px] border-black/50"
+                        key={image?.ad_id}
+                      >
+                        <img
+                          className="object-cover h-full w-full"
+                          src={`${PATH}/${image?.url}`}
+                          alt="image"
+                        />
+                        <input
+                          type="file"
+                          hidden
+                          onChange={(e) => {
+                            handleUploadAdImg(e);
+                          }}
+                        />
+                        <div
+                          onClick={(event) => {
+                            event.preventDefault();
+                            handleDeleteImg(image);
+                          }}
+                          className="absolute top-2 right-2 w-5 h-5 bg-gray-500 rounded-[50%]"
+                        >
+                          <img src="/svg/close.svg" alt="закрыть" />
+                        </div>
+                      </label>
+                    ))}
                   </div>
-                </div>
-                <div className="w-[90px] h-[90px] bg-[#F0F0F0] relative cursor-pointer">
-                  <div className="absolute z-10 top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] stroke-black">
-                    <img src="/svg/plus.svg" alt="закрыть" />
-                  </div>
-                </div>
+                ) : (
+                  <label className="w-[90px] h-[90px] bg-[#F0F0F0] relative cursor-pointer">
+                    <div className="absolute z-10 top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] stroke-black">
+                      <img src="/svg/plus.svg" alt="закрыть" />
+                    </div>
+                    <input
+                      type="file"
+                      hidden
+                      onChange={(e) => {
+                        handleUploadAdImg(e);
+                      }}
+                    />
+                  </label>
+                )}
               </div>
             </div>
             <p className="text-[16px] font-[600] mb-1">Цена</p>
