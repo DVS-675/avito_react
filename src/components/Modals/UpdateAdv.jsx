@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import ButtonBlue from "../UI/Buttons/ButtonBlue";
+import { updateAd } from "../../api";
+import Cookies from "js-cookie";
 
-const UpdateAdv = ({ closeModal }) => {
+const UpdateAdv = ({ closeModal, ad, currentAd }) => {
   const [disabled, setDisabled] = useState(true);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(null);
-  
+
+  const token = Cookies.get("accessToken");
+
+  const handleUpdateAdd = async () => {
+    await updateAd(ad.id, token, title, description, price);
+    closeModal();
+    currentAd();
+  };
 
   useEffect(
     () => {
@@ -46,7 +54,7 @@ const UpdateAdv = ({ closeModal }) => {
             <input
               className="h-[50px] w-full border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] flex items-start justify-start px-5 py-5 outline-none"
               type="textarea"
-              placeholder="Введите название"
+              placeholder={ad.title}
               name="title"
               onChange={(event) => setTitle(event.target.value)}
             />
@@ -54,7 +62,7 @@ const UpdateAdv = ({ closeModal }) => {
             <textarea
               className="h-[200px] w-full border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] flex items-start justify-start px-5 py-5 outline-none"
               type="textarea"
-              placeholder="Введите описание"
+              placeholder={ad.description}
               name="description"
               onChange={(event) => setDescription(event.target.value)}
             />
@@ -82,11 +90,11 @@ const UpdateAdv = ({ closeModal }) => {
             <input
               className="h-[50px] w-[200px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] flex items-start justify-start px-5 py-5 outline-none mb-5"
               type="number"
-              placeholder=""
+              placeholder={ad.price}
               name="price"
               onChange={(event) => setPrice(event.target.value)}
             />
-            <div className="w-[181px]">
+            <div onClick={() => handleUpdateAdd()} className="w-[181px]">
               <ButtonBlue text="Сохранить" disabled={disabled} />
             </div>
           </div>

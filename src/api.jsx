@@ -54,6 +54,18 @@ export async function changeCurrentUser(token, name, surname, phone, city) {
   return responseData;
 }
 
+export async function updateAvatar(formData, token) {
+  const response = await fetch(`${PATH}/user/avatar`, {
+    method: "POST",
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const responseData = await response.json();
+  return responseData;
+}
+
 export async function getCurrentUserAds(token) {
   const response = await fetch(`${PATH}/ads/me`, {
     method: "GET",
@@ -71,6 +83,45 @@ export async function getCurrentUserAds(token) {
 export async function getAd(ad_id) {
   const response = await fetch(`${PATH}/ads/${ad_id}`, {
     method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Ошибка");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function deleteAd(ad_id, token) {
+  const response = await fetch(`${PATH}/ads/${ad_id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Ошибка");
+  }
+
+  const responseData = await response.json();
+  return responseData;
+}
+
+export async function updateAd(ad_id, token, title, description, price) {
+  const response = await fetch(`${PATH}/ads/${ad_id}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      title: title,
+      description: description,
+      price: price,
+    }),
   });
 
   if (!response.ok) {

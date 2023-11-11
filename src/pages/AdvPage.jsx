@@ -6,12 +6,13 @@ import ReviewsModal from "../components/Modals/ReviewsModal";
 import React, { useEffect, useState } from "react";
 import NewAdv from "../components/Modals/NewAdv";
 import UpdateAdv from "../components/Modals/UpdateAdv";
-import { getAd, getAdsFeedback } from "../api";
+import { deleteAd, getAd, getAdsFeedback, getCurrentUser } from "../api";
 import { formatDistance } from "date-fns";
 import { ru } from "date-fns/locale";
 import Header from "../components/Header/Header";
 
 import ButtonNumber from "../components/UI/Buttons/ButtonNumber";
+import Cookies from "js-cookie";
 
 const AdvPage = () => {
   const customStyles = {
@@ -39,18 +40,32 @@ const AdvPage = () => {
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [feedback, setFeedback] = useState();
   const [ad, setAd] = useState();
+  const [deletedAdd, setDeletedAdd] = useState(false);
 
-  const [showPhone, setShowPhone] = useState(false);
   const PATH = "http://localhost:8090";
+
+  const token = Cookies.get("accessToken");
 
   const adsFeedback = async () => {
     const feedback = await getAdsFeedback(id);
+
     setFeedback(feedback);
   };
 
   const currentAd = async () => {
     const ad = await getAd(id);
     setAd(ad);
+    const user = await getCurrentUser(token);
+    if (ad.user.id === user.id) {
+      setMyAdv(true);
+    } else {
+      setMyAdv(false);
+    }
+  };
+
+  const handleDeleteAdd = async () => {
+    await deleteAd(ad.id, token);
+    setDeletedAdd(true);
   };
 
   function openAddModal() {
@@ -151,79 +166,89 @@ const AdvPage = () => {
               </div>
             </div>
             <div className="col-span-8">
-              <div className="flex flex-col items-start gap-8">
-                <div className="flex flex-col items-start gap-2">
-                  <div className="text-[32px] font-bold text-black">
-                    {ad.title}
-                  </div>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[16px] font-normal text-[#5F5F5F]">
-                      {`${formatDistance(new Date(ad.created_on), new Date(), {
-                        locale: ru,
-                      })} назад`}
-                    </div>
-                    <div className="text-[16px] font-normal text-[#5F5F5F]">
-                      {ad.user.city}
-                    </div>
-                    {feedback ? (
-                      <div
-                        onClick={openReviewsModal}
-                        className="text-[16px] font-normal text-[#009EE4] cursor-pointer"
-                      >
-                        {`${feedback.length} отзыва`}
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+              {deletedAdd ? (
+                <div className="w-full h-full flex items-center justify-center text-[32px] font-normal">
+                  Объявление удалено!
                 </div>
-                <div className="flex flex-col items-start gap-5">
-                  <div className="text-[32px] font-bold text-black">
-                    {`${ad.price} ₽`}
-                  </div>
-                  {myAdv ? (
-                    <div className="flex flex-row gap-3 items-center">
-                      <div onClick={openUpdateModal}>
-                        <ButtonBlue text="Редактировать" />
-                      </div>
-                      <div>
-                        <ButtonBlue text="Снять с публикации" />
-                      </div>
+              ) : (
+                <div className="flex flex-col items-start gap-8">
+                  <div className="flex flex-col items-start gap-2">
+                    <div className="text-[32px] font-bold text-black">
+                      {ad.title}
                     </div>
-                  ) : (
-                    <div>
-                      {ad && ad.user.phone && (
-                        <ButtonNumber phone={ad.user.phone} />
-                      )}
-                    </div>
-                  )}
-                </div>
-                <Link to={`/sellerProfile/${ad.user_id}`}>
-                  <div className="flex flex-row items-center gap-4">
-                    <div className="w-[40px] h-[40px] rounded-[50%] bg-[#F0F0F0]">
-                      {ad.user.avatar ? (
-                        <img src={`${PATH}/${ad.user.avatar}`} alt="avatar" />
-                      ) : (
-                        <img
-                          className=""
-                          src={"/img/noprofile.png"}
-                          alt="avatar"
-                        />
-                      )}
-                    </div>
-                    <div className="flex flex-col items-start ">
-                      <div className="text-[20px] font-semibold text-[#009EE4]">
-                        {ad.user.name}
+                    <div className="flex flex-col items-start gap-1">
+                      <div className="text-[16px] font-normal text-[#5F5F5F]">
+                        {`${formatDistance(
+                          new Date(ad.created_on),
+                          new Date(),
+                          {
+                            locale: ru,
+                          }
+                        )} назад`}
                       </div>
                       <div className="text-[16px] font-normal text-[#5F5F5F]">
-                        {`Продает товары с ${
-                          months[new Date(ad.user.sells_from).getMonth()]
-                        } ${new Date(ad.user.sells_from).getFullYear()}`}
+                        {ad.user.city}
                       </div>
+                      {feedback ? (
+                        <div
+                          onClick={openReviewsModal}
+                          className="text-[16px] font-normal text-[#009EE4] cursor-pointer"
+                        >
+                          {`${feedback.length} отзыва`}
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
-                </Link>
-              </div>
+                  <div className="flex flex-col items-start gap-5">
+                    <div className="text-[32px] font-bold text-black">
+                      {`${ad.price} ₽`}
+                    </div>
+                    {myAdv ? (
+                      <div className="flex flex-row gap-3 items-center">
+                        <div onClick={openUpdateModal}>
+                          <ButtonBlue text="Редактировать" />
+                        </div>
+                        <div onClick={() => handleDeleteAdd()}>
+                          <ButtonBlue text="Снять с публикации" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        {ad && ad.user.phone && (
+                          <ButtonNumber phone={ad.user.phone} />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <Link to={`/sellerProfile/${ad.user_id}`}>
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="w-[40px] h-[40px] rounded-[50%] bg-[#F0F0F0] overflow-hidden">
+                        {ad.user.avatar ? (
+                          <img src={`${PATH}/${ad.user.avatar}`} alt="avatar" />
+                        ) : (
+                          <img
+                            className=""
+                            src={"/img/noprofile.png"}
+                            alt="avatar"
+                          />
+                        )}
+                      </div>
+                      <div className="flex flex-col items-start ">
+                        <div className="text-[20px] font-semibold text-[#009EE4]">
+                          {ad.user.name}
+                        </div>
+                        <div className="text-[16px] font-normal text-[#5F5F5F]">
+                          {`Продает товары с ${
+                            months[new Date(ad.user.sells_from).getMonth()]
+                          } ${new Date(ad.user.sells_from).getFullYear()}`}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex flex-col items-start gap-5 h-full my-10 w-[60%]">
@@ -258,7 +283,11 @@ const AdvPage = () => {
             style={customStyles}
             contentLabel="Update adv modal"
           >
-            <UpdateAdv closeModal={closeUpdateModal} />
+            <UpdateAdv
+              closeModal={closeUpdateModal}
+              ad={ad}
+              currentAd={currentAd}
+            />
           </Modal>
           <Modal
             isOpen={addModalIsOpen}

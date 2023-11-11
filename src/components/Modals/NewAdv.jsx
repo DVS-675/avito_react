@@ -17,10 +17,6 @@ const NewAdv = ({ closeModal }) => {
     setAdded(true);
   };
 
-  console.log(title);
-  console.log(description);
-  console.log(price);
-
   useEffect(
     () => {
       if (

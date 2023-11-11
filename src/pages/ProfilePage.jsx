@@ -9,7 +9,14 @@ import { useEffect, useState } from "react";
 import { delToken, getAccessToken } from "../helpers/AuthHelpers";
 import { useAllowedContext } from "../contexts/allowed";
 import Header from "../components/Header/Header";
-import { changeCurrentUser, getCurrentUser, getCurrentUserAds } from "../api";
+import {
+  changeCurrentUser,
+  getCurrentUser,
+  getCurrentUserAds,
+  updateAvatar,
+} from "../api";
+import Cookies from "js-cookie";
+import LightGallery from "lightgallery/react";
 
 const ProfilePage = () => {
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
@@ -21,14 +28,14 @@ const ProfilePage = () => {
   const [city, setCity] = useState();
   const [phone, setPhone] = useState();
 
-  console.log(userAds);
+  const PATH = "http://localhost:8090";
 
   const handleLogout = () => {
     delToken();
     setIsAllowed(false);
   };
 
-  const token = getAccessToken();
+  const token = Cookies.get("accessToken");
 
   const getUserAds = async () => {
     const responseData = await getCurrentUserAds(token);
@@ -59,12 +66,20 @@ const ProfilePage = () => {
     setAddModalIsOpen(false);
   }
 
+  const handleUploadImage = async (event) => {
+    let selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      updateAvatar(formData, token);
+    }
+    getUser();
+  };
+
   useEffect(() => {
     getUserAds();
     getUser();
   }, []);
-
-  console.log(user);
 
   const customStyles = {
     content: {
@@ -111,10 +126,29 @@ const ProfilePage = () => {
             </div>
             <div className="flex flex-row items-start gap-12">
               <div className="flex flex-col items-center gap-2">
-                <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0]" />
-                <p className="font-normal text-[16px] text-[#009EE4]">
+                <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0]">
+                  {user && user.avatar ? (
+                    <LightGallery>
+                      <img
+                        className="object-cover h-full w-full rounded-[50%]"
+                        src={`${PATH}/${user?.avatar}`}
+                        alt="image"
+                      />
+                    </LightGallery>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <label className="font-normal text-[16px] text-[#009EE4]">
                   Заменить
-                </p>
+                  <input
+                    type="file"
+                    hidden
+                    onChange={(e) => {
+                      handleUploadImage(e);
+                    }}
+                  />
+                </label>
               </div>
               <div className="flex flex-col items-start gap-5 w-[614px] relative">
                 <div className="flex flex-row items-center justify-between gap-3 w-full">
@@ -191,7 +225,9 @@ const ProfilePage = () => {
             {userAds &&
               userAds.map((item) => (
                 <div key={item.index}>
-                  <AdvertItem item={item} />
+                  <Link to={`/advertisement/${item.id}`}>
+                    <AdvertItem item={item} />
+                  </Link>
                 </div>
               ))}
           </div>
