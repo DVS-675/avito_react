@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ButtonBlue from "../components/UI/Buttons/ButtonBlue";
 import Button from "../components/UI/Buttons/Button";
 import { loginUser, registerUser } from "../api";
@@ -7,6 +7,7 @@ import { validateEmail } from "../helpers/helpers";
 import { useAllowedContext } from "../contexts/allowed";
 import Cookies from "js-cookie";
 import { saveTokensStorage } from "../helpers/AuthHelpers";
+import { useResize } from "../helpers/hooks/useResize";
 
 const LoginPage = () => {
   const { isAllowed, setIsAllowed } = useAllowedContext();
@@ -123,23 +124,61 @@ const LoginPage = () => {
   //   [password]
   // );
 
+  const { isScreenLg } = useResize();
+
+  useEffect(() => {
+    window.dispatchEvent(new Event("resize"));
+  }, [isScreenLg]);
+
   return path === "/login" ? (
-    <div className="h-[100vh] w-full relative bg-[#009ee4] flex items-center justify-center">
-      <div className="w-[366px] rounded-[12px] bg-white p-10 flex flex-col items-center ">
+    <div className="h-[100vh] w-full relative lg:bg-[#009ee4] flex items-center justify-center">
+      {isScreenLg ? (
+        <div />
+      ) : (
+        <div className="w-full absolute top-0 h-20 bg-[#009EE4] flex items-center px-5 ">
+          <Link to="/">
+            <div className="w-12 h-12 flex items-center justify-center bg-white rounded-[50%]">
+              <img className="h-8 w-8" src="/svg/logo.svg" alt="logo" />
+            </div>
+          </Link>
+        </div>
+      )}
+
+      <div className="w-full lg:w-[366px] rounded-[12px] bg-white px-5 lg:p-10 flex flex-col items-center ">
         <img src="/svg/logo_text.svg" alt="logo" />
-        <div className="flex flex-col items-center w-full py-10 gap-8 relative">
-          <input
-            className=" w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="text"
-            placeholder="Email"
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <input
-            className=" w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="password"
-            placeholder="Пароль"
-            onChange={(event) => setPassword(event.target.value)}
-          />
+        <div className="flex flex-col items-center w-full py-10 gap-4 lg:gap-8 relative">
+          {isScreenLg ? (
+            <>
+              <input
+                className=" w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Email"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              <input
+                className=" w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="password"
+                placeholder="Пароль"
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </>
+          ) : (
+            <>
+              <input
+                className=" w-full h-[40px] px-4 rounded-[30px] border-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Email"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              <input
+                className=" w-full h-[40px] px-4 rounded-[30px] border-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="password"
+                placeholder="Пароль"
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </>
+          )}
+
           {error ? (
             <div className="text-red-500 text-[16px] pb-2 absolute bottom-0">
               {error}
@@ -166,46 +205,101 @@ const LoginPage = () => {
       </div>
     </div>
   ) : (
-    <div className="h-[100vh] w-full relative bg-[#009ee4] flex items-center justify-center">
-      <div className="w-[366px] rounded-[12px] bg-white p-10 flex flex-col items-center ">
+    <div className="h-[100vh] w-full relative lg:bg-[#009ee4] flex items-center justify-center">
+      {isScreenLg ? (
+        <div />
+      ) : (
+        <div className="w-full absolute top-0 h-20 bg-[#009EE4] flex items-center px-5 ">
+          <Link to="/">
+            <div className="w-12 h-12 flex items-center justify-center bg-white rounded-[50%]">
+              <img className="h-8 w-8" src="/svg/logo.svg" alt="logo" />
+            </div>
+          </Link>
+        </div>
+      )}
+      <div className="w-full lg:w-[366px] rounded-[12px] bg-white p-10 flex flex-col items-center ">
         <img src="/svg/logo_text.svg" alt="logo" />
         <div className="flex flex-col items-center w-full py-10 gap-8 relative">
-          <input
-            className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="text"
-            placeholder="Email"
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <input
-            className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="password"
-            placeholder="Пароль"
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          <input
-            className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="text"
-            placeholder="Повторите пароль"
-            onChange={(event) => setConfirmPassword(event.target.value)}
-          />
-          <input
-            className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="text"
-            placeholder="Имя (необязательно)"
-            onChange={(event) => setName(event.target.value)}
-          />
-          <input
-            className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="text"
-            placeholder="Фамилия (необязательно)"
-            onChange={(event) => setSurname(event.target.value)}
-          />
-          <input
-            className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
-            type="text"
-            placeholder="Город (необязательно)"
-            onChange={(event) => setCity(event.target.value)}
-          />
+          {isScreenLg ? (
+            <>
+              <input
+                className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Email"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="password"
+                placeholder="Пароль"
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Повторите пароль"
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Имя (необязательно)"
+                onChange={(event) => setName(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Фамилия (необязательно)"
+                onChange={(event) => setSurname(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] border-b-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Город (необязательно)"
+                onChange={(event) => setCity(event.target.value)}
+              />
+            </>
+          ) : (
+            <>
+              <input
+                className="w-full h-[40px] px-4 rounded-[30px] border-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Email"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] px-4 rounded-[30px] border-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="password"
+                placeholder="Пароль"
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] px-4 rounded-[30px] border-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Повторите пароль"
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] px-4 rounded-[30px] border-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Имя (необязательно)"
+                onChange={(event) => setName(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] px-4 rounded-[30px] border-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Фамилия (необязательно)"
+                onChange={(event) => setSurname(event.target.value)}
+              />
+              <input
+                className="w-full h-[40px] px-4 rounded-[30px] border-[1px] border-[#d9d9d9] text-[16px] font-normal text-[#D9D9D9] focus:outline-none focus:border-[#009EE4] focus:text-black"
+                type="text"
+                placeholder="Город (необязательно)"
+                onChange={(event) => setCity(event.target.value)}
+              />
+            </>
+          )}
+
           {error ? (
             <div className="text-red-500 text-[16px] pb-2 absolute bottom-0">
               {error}

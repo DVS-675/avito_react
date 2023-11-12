@@ -124,7 +124,7 @@ const ProfilePage = () => {
             <div className="text-[32px] font-medium text-black pb-5">
               Настройки профиля
             </div>
-            <div className="flex flex-row items-start gap-12">
+            <div className="flex flex-row items-start gap-12 w-fit">
               <div className="flex flex-col items-center gap-2">
                 <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0]">
                   {user && user.avatar ? (
@@ -150,7 +150,7 @@ const ProfilePage = () => {
                   />
                 </label>
               </div>
-              <div className="flex flex-col items-start gap-5 w-[614px] relative">
+              <div className="flex flex-col items-start gap-5 w-full relative">
                 <div className="flex flex-row items-center justify-between gap-3 w-full">
                   <div className="flex flex-col items-start gap-1 w-full input">
                     <p className="font-medium text-[16px]">Имя</p>

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "../node_modules/swiper/swiper.min";
+@import "swiper/css/effect-fade";
+@import "swiper/css/pagination";
+
 @import "lightgallery/css/lightgallery";
 @import "lightgallery/css/lg-zoom";
 @import "lightgallery/css/lg-thumbnail";
@@ -67,4 +71,12 @@ body {
   left: 0;
   width: 6px; /*Толщина скролла*/
   height: 6px;
+}
+
+.item {
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.1);
+}
+
+.swiper-wrapper {
+  height: 100%;
 }

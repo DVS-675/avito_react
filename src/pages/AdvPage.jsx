@@ -10,29 +10,13 @@ import { deleteAd, getAd, getAdsFeedback, getCurrentUser } from "../api";
 import { formatDistance } from "date-fns";
 import { ru } from "date-fns/locale";
 import Header from "../components/Header/Header";
-
+import { Swiper, SwiperSlide } from "swiper/react";
 import ButtonNumber from "../components/UI/Buttons/ButtonNumber";
 import Cookies from "js-cookie";
-
+import { useResize } from "../helpers/hooks/useResize";
+import MobileMenu from "../components/MobileMenu/MobileMenu";
+import { Pagination } from "swiper";
 const AdvPage = () => {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      height: "90vh",
-      background: "transparent",
-      width: "50vw",
-      border: "none",
-    },
-    overlay: {
-      zIndex: "100",
-      background: "rgba(45, 45, 45, 0.85)",
-    },
-  };
   const { id } = useParams();
   const [reviewsModalIsOpen, setReviewsModalIsOpen] = React.useState(false);
   const [updateModalIsOpen, setUpdateModalIsOpen] = React.useState(false);
@@ -113,12 +97,47 @@ const AdvPage = () => {
     "декабря",
   ];
 
+  const { isScreenLg } = useResize();
+
+  useEffect(() => {
+    window.dispatchEvent(new Event("resize"));
+  }, [isScreenLg]);
+
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      height: "90vh",
+      background: "transparent",
+      width: "50vw",
+      border: "none",
+    },
+    overlay: {
+      zIndex: "100",
+      background: "rgba(45, 45, 45, 0.85)",
+    },
+  };
+
   return (
     <div className="h-full w-full relative">
-      <Header openAddModal={openAddModal} />
+      {isScreenLg ? (
+        <Header openAddModal={openAddModal} />
+      ) : (
+        <div className="w-full sticky top-0 h-20 bg-[#009EE4] flex items-center px-5 z-20">
+          <Link to="/">
+            <div className="w-12 h-12 flex items-center justify-center bg-white rounded-[50%]">
+              <img className="h-8 w-8" src="/svg/logo.svg" alt="logo" />
+            </div>
+          </Link>
+        </div>
+      )}
       {ad && (
-        <div className="relative px-[140px]">
-          <div className="h-[50px] w-full flex flex-row items-center justify-start gap-14 my-10 ">
+        <div className="relative px-0 lg:px-[140px]">
+          <div className="hidden h-[50px] w-full lg:flex flex-row items-center justify-start gap-14 my-10 ">
             <img src="/svg/logo.svg" alt="logo" />
             <div className="w-[241px]">
               <Link to="/">
@@ -126,49 +145,96 @@ const AdvPage = () => {
               </Link>
             </div>
           </div>
-          <div className="grid grid-cols-12 gap-20 w-full my-10">
-            <div className="col-span-4">
-              <div className="flex flex-col items-center justify-between gap-7 w-full">
-                <div className="w-full h-full aspect-square">
-                  {ad.images[0]?.url ? (
-                    <LightGallery>
-                      <img
-                        className="object-cover h-full w-full"
-                        src={`${PATH}/${ad.images[0].url}`}
-                        alt="image"
-                      />
-                    </LightGallery>
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      Изображение отсутствует
-                    </div>
-                  )}
-                </div>
-                <div className="w-full grid grid-cols-5 gap-[3px] h-[80px] overflow-hidden">
-                  {ad.images.map((image) => (
-                    <div
-                      className="col-span-1 h-full w-full"
-                      key={image?.ad_id}
-                    >
+          <div className="grid grid-cols-12 gap-5 lg:gap-20 w-full lg:my-10">
+            <div className="col-span-12 lg:col-span-6 2xl:col-span-4">
+              {isScreenLg ? (
+                <div className="flex flex-col items-center justify-between gap-7 w-full">
+                  <div className="w-full h-[320px] relative">
+                    {ad.images[0]?.url ? (
                       <LightGallery>
                         <img
                           className="object-cover h-full w-full"
-                          src={`${PATH}/${image?.url}`}
+                          src={`${PATH}/${ad.images[0].url}`}
                           alt="image"
                         />
                       </LightGallery>
-                    </div>
-                  ))}
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        Изображение отсутствует
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-full grid grid-cols-5 gap-[3px] h-[80px] overflow-hidden">
+                    {ad.images.map((image) => (
+                      <div
+                        className="col-span-1 h-full w-full"
+                        key={image?.ad_id}
+                      >
+                        <LightGallery>
+                          <img
+                            className="object-cover h-full w-full"
+                            src={`${PATH}/${image?.url}`}
+                            alt="image"
+                          />
+                        </LightGallery>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="overflow-hidden h-[320px] box-border">
+                  <div className="absolute top-5 left-5 z-30">
+                    <Link to="/">
+                      <img
+                        className="h-full w-full"
+                        src="/svg/back_button.svg"
+                        alt="image"
+                      />
+                    </Link>
+                  </div>
+                  <Swiper
+                    slidesPerView={1}
+                    speed={900}
+                    spaceBetween={0}
+                    allowTouchMove
+                    pagination={{
+                      dynamicBullets: true,
+                    }}
+                    modules={[Pagination]}
+                    style={{
+                      overflow: "hidden",
+                      width: "100%",
+                      height: "100%",
+                      marginLeft: 0,
+                    }}
+                  >
+                    {ad.images.map((image) => (
+                      <SwiperSlide className="h-full" key={image?.ad_id}>
+                        <div
+                          key={image?.ad_id}
+                          className="relative h-full w-full"
+                        >
+                          <LightGallery>
+                            <img
+                              src={`${PATH}/${image?.url}`}
+                              alt="image"
+                              className="object-cover h-full w-full"
+                            />
+                          </LightGallery>
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+              )}
             </div>
-            <div className="col-span-8">
+            <div className="col-span-12 lg:col-span-6 2xl:col-span-8 px-5 lg:px-0">
               {deletedAdd ? (
                 <div className="w-full h-full flex items-center justify-center text-[32px] font-normal">
                   Объявление удалено!
                 </div>
               ) : (
-                <div className="flex flex-col items-start gap-8">
+                <div className="flex flex-col items-start gap-4 lg:gap-8">
                   <div className="flex flex-col items-start gap-2">
                     <div className="text-[32px] font-bold text-black">
                       {ad.title}
@@ -198,21 +264,27 @@ const AdvPage = () => {
                       )}
                     </div>
                   </div>
-                  <div className="flex flex-col items-start gap-5">
+                  <div className="flex flex-col items-start gap-5 w-full">
                     <div className="text-[32px] font-bold text-black">
                       {`${ad.price} ₽`}
                     </div>
                     {myAdv ? (
-                      <div className="flex flex-row gap-3 items-center">
-                        <div onClick={openUpdateModal}>
+                      <div className="flex flex-col lg:flex-row gap-3 items-center w-full lg:w-fit">
+                        <div
+                          className="w-full lg:w-fit"
+                          onClick={openUpdateModal}
+                        >
                           <ButtonBlue text="Редактировать" />
                         </div>
-                        <div onClick={() => handleDeleteAdd()}>
+                        <div
+                          className="w-full lg:w-fit"
+                          onClick={() => handleDeleteAdd()}
+                        >
                           <ButtonBlue text="Снять с публикации" />
                         </div>
                       </div>
                     ) : (
-                      <div>
+                      <div className="w-full">
                         {ad && ad.user.phone && (
                           <ButtonNumber phone={ad.user.phone} />
                         )}
@@ -248,12 +320,12 @@ const AdvPage = () => {
               )}
             </div>
           </div>
-          <div className="flex flex-col items-start gap-5 h-full my-10 w-[60%]">
-            <div className="text-[32px] font-medium text-[#000]">
+          <div className="flex flex-col items-start gap-3 lg:gap-5 h-full my-10 w-[60%] px-5 lg:px-0">
+            <div className="text-[18px] lg:text-[32px] font-medium text-[#000]">
               Описание товара
             </div>
             {ad.description ? (
-              <div className="text-[16px] font-normal text-[#000]">
+              <div className="text-[14px] lg:text-[16px] font-normal text-[#000]">
                 {ad.description}
               </div>
             ) : (
@@ -262,6 +334,7 @@ const AdvPage = () => {
               </div>
             )}
           </div>
+          {isScreenLg ? <div /> : <MobileMenu openAddModal={openAddModal} />}
           <Modal
             isOpen={reviewsModalIsOpen}
             onRequestClose={closeReviewsModal}
