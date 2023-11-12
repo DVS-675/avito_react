@@ -3,7 +3,7 @@ import ButtonBlue from "../UI/Buttons/ButtonBlue";
 import Cookies from "js-cookie";
 import { AddNewAd } from "../../api";
 
-const NewAdv = ({ closeModal }) => {
+const NewAdv = ({ closeModal, getAds }) => {
   const [disabled, setDisabled] = useState(true);
 
   const [title, setTitle] = useState("");
@@ -13,23 +13,24 @@ const NewAdv = ({ closeModal }) => {
   const token = Cookies.get("accessToken");
 
   const newAd = async () => {
-    await AddNewAd(token, title, description, Number(price));
-    setAdded(true);
+    try {
+      setDisabled(true);
+      await AddNewAd(token, title, description, Number(price));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDisabled(true);
+      setAdded(true);
+      getAds();
+      closeModal();
+    }
   };
 
   useEffect(
     () => {
-      if (
-        title.split("").length > 3 &&
-        description.split("").length > 3 &&
-        price
-      ) {
+      if (title && description && price) {
         setDisabled(false);
-      } else if (
-        title.split("").length < 3 ||
-        description.split("").length < 3 ||
-        !price
-      ) {
+      } else if (!title || !description || !price) {
         setDisabled(true);
       }
     },

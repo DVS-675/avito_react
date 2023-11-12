@@ -4,10 +4,9 @@ import { deleteAdImage, updateAd, updateAdImages } from "../../api";
 import Cookies from "js-cookie";
 
 const UpdateAdv = ({ closeModal, ad, currentAd }) => {
-  const [disabled, setDisabled] = useState(true);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(null);
+  const [title, setTitle] = useState(ad.title);
+  const [description, setDescription] = useState(ad.description);
+  const [price, setPrice] = useState(ad.price);
   const PATH = "http://localhost:8090";
 
   const token = Cookies.get("accessToken");
@@ -35,26 +34,7 @@ const UpdateAdv = ({ closeModal, ad, currentAd }) => {
     currentAd();
   };
 
-  useEffect(
-    () => {
-      if (
-        title.split("").length > 3 &&
-        description.split("").length > 3 &&
-        price
-      ) {
-        setDisabled(false);
-      } else if (
-        title.split("").length < 3 ||
-        description.split("").length < 3 ||
-        !price
-      ) {
-        setDisabled(true);
-      }
-    },
-    [title],
-    [description],
-    [price]
-  );
+  console.log(ad);
 
   return (
     <div className="relative flex justify-center items-center w-full h-full">
@@ -71,16 +51,17 @@ const UpdateAdv = ({ closeModal, ad, currentAd }) => {
             <p className="text-[16px] font-[600] mb-1">Название</p>
             <input
               className="h-[50px] w-full border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] flex items-start justify-start px-5 py-5 outline-none"
-              type="textarea"
-              placeholder={ad.title}
+              type="text"
+              value={title}
               name="title"
               onChange={(event) => setTitle(event.target.value)}
             />
+
             <p className="text-[16px] font-[600] mb-1">Описание</p>
             <textarea
               className="h-[200px] w-full border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] flex items-start justify-start px-5 py-5 outline-none"
               type="textarea"
-              placeholder={ad.description}
+              value={description}
               name="description"
               onChange={(event) => setDescription(event.target.value)}
             />
@@ -91,12 +72,12 @@ const UpdateAdv = ({ closeModal, ad, currentAd }) => {
                   не более 5 фотографий
                 </p>
               </div>
-              <div className="w-full">
-                {ad && ad.images ? (
-                  <div className="w-full flex flex-row items-center gap-2">
+              <div className="w-full h-[90px]">
+                {ad.images && ad.images.length ? (
+                  <div className="w-full h-full flex flex-row items-center gap-2">
                     {ad.images.map((image) => (
                       <label
-                        className="w-[90px] h-[90px] relative cursor-pointer border-[1px] border-black/50"
+                        className="h-full aspect-square relative cursor-pointer border-[1px] border-black/50"
                         key={image?.ad_id}
                       >
                         <img
@@ -124,18 +105,20 @@ const UpdateAdv = ({ closeModal, ad, currentAd }) => {
                     ))}
                   </div>
                 ) : (
-                  <label className="w-[90px] h-[90px] bg-[#F0F0F0] relative cursor-pointer">
-                    <div className="absolute z-10 top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] stroke-black">
-                      <img src="/svg/plus.svg" alt="закрыть" />
-                    </div>
-                    <input
-                      type="file"
-                      hidden
-                      onChange={(e) => {
-                        handleUploadAdImg(e);
-                      }}
-                    />
-                  </label>
+                  <div className="h-full aspect-square relative cursor-pointer bg-[#F0F0F0]">
+                    <label className="h-full w-full">
+                      <div className="absolute z-10 top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] stroke-black">
+                        <img src="/svg/plus.svg" alt="закрыть" />
+                      </div>
+                      <input
+                        type="file"
+                        hidden
+                        onChange={(e) => {
+                          handleUploadAdImg(e);
+                        }}
+                      />
+                    </label>
+                  </div>
                 )}
               </div>
             </div>
@@ -143,12 +126,12 @@ const UpdateAdv = ({ closeModal, ad, currentAd }) => {
             <input
               className="h-[50px] w-[200px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] flex items-start justify-start px-5 py-5 outline-none mb-5"
               type="number"
-              placeholder={ad.price}
+              value={price}
               name="price"
               onChange={(event) => setPrice(event.target.value)}
             />
             <div onClick={() => handleUpdateAdd()} className="w-[181px]">
-              <ButtonBlue text="Сохранить" disabled={disabled} />
+              <ButtonBlue text="Сохранить" />
             </div>
           </div>
         </div>

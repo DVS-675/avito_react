@@ -110,7 +110,7 @@ const MainPage = () => {
         style={customStyles}
         contentLabel="Add adv modal"
       >
-        <NewAdv closeModal={closeAddModal} />
+        <NewAdv closeModal={closeAddModal} getAds={getAds} />
       </Modal>
     </div>
   );

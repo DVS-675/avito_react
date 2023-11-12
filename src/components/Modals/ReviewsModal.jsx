@@ -22,8 +22,15 @@ const ReviewsModal = ({ closeModal, data, adsFeedback }) => {
   }, [review]);
 
   const handleAddReview = async () => {
-    await AddAdsFeedback(id, review, token);
-    adsFeedback();
+    try {
+      setDisabled(true);
+      await AddAdsFeedback(id, review, token);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      adsFeedback();
+      setDisabled(false);
+    }
   };
 
   return (
