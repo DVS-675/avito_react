@@ -81,15 +81,18 @@ const MainPage = () => {
               <img className="h-8 w-8" src="/svg/logo.svg" alt="logo" />
             </div>
           </Link>
-          <div className="ml-3 flex flex-row w-full gap-1 h-12 items-center ">
-            <input
-              className="h-full border-[1px] border-[#00000033] active:border-[#009EE4] rounded-[30px] w-full flex items-center justify-center px-5 outline-none"
-              type="search"
-              placeholder="Поиск"
-              name="search"
-              onInput={(e) => setSearchValue(e.target.value)}
-            />
-            <div onClick={HandleFilterAds} className="w-[50px]">
+          <div className="ml-3 flex flex-row w-full gap-1 h-12 items-center relative">
+            <div className="w-[80%] h-full">
+              <input
+                className="h-full border-[1px] border-[#00000033] active:border-[#009EE4] rounded-[30px] w-full flex items-center justify-center px-5 outline-none"
+                type="search"
+                placeholder="Поиск"
+                name="search"
+                onInput={(e) => setSearchValue(e.target.value)}
+              />
+            </div>
+
+            <div onClick={HandleFilterAds} className="w-[30%]">
               <ButtonBlue text="Найти" />
             </div>
           </div>
@@ -114,7 +117,7 @@ const MainPage = () => {
         </div>
         <div className="h-full w-full relative">
           <SectionTitle text="Объявления" />
-          <div className="flex flex-wrap flex-row gap-3 lg:gap-7 items-center justify-center lg:justify-start">
+          <div className="flex flex-wrap flex-row gap-2 lg:gap-7 items-start justify-start lg:justify-start">
             {filteredAds
               ? filteredAds.map((item) => (
                   <div key={item.id}>
