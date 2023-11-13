@@ -118,11 +118,11 @@ const SellerPage = () => {
           <div className="flex flex-col items-start justify-between mb-[70px]">
             <div className="flex flex-row items-start gap-12">
               {currentUser && currentUser.avatar ? (
-                <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0]">
+                <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0] overflow-hidden">
                   <img src={`${PATH}/${currentUser.avatar}`} alt="avatar" />
                 </div>
               ) : (
-                <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0]"></div>
+                <div className=" h-[170px] w-[170px] rounded-[50%] bg-[#F0F0F0] overflow-hidden"></div>
               )}
               {currentUser && (
                 <div className="flex flex-col items-start gap-8">
