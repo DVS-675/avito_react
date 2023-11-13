@@ -16,9 +16,12 @@ import Cookies from "js-cookie";
 import { useResize } from "../helpers/hooks/useResize";
 import MobileMenu from "../components/MobileMenu/MobileMenu";
 import { Pagination } from "swiper";
+import ReviewsModalMobile from "../components/Modals/ReviewsModalMobile";
+import SellerPageModal from "../components/Modals/SellerPageModal";
 const AdvPage = () => {
   const { id } = useParams();
   const [reviewsModalIsOpen, setReviewsModalIsOpen] = React.useState(false);
+  const [sellerPageModal, setSellerPageModal] = useState(false);
   const [updateModalIsOpen, setUpdateModalIsOpen] = React.useState(false);
   const [myAdv, setMyAdv] = useState(false);
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
@@ -71,6 +74,10 @@ const AdvPage = () => {
 
   function closeUpdateModal() {
     setUpdateModalIsOpen(false);
+  }
+
+  function closeSellerModal() {
+    setSellerPageModal(false);
   }
 
   useEffect(() => {
@@ -127,7 +134,7 @@ const AdvPage = () => {
       {isScreenLg ? (
         <Header openAddModal={openAddModal} />
       ) : (
-        <div className="w-full sticky top-0 h-20 bg-[#009EE4] flex items-center px-5 z-20">
+        <div className="w-full sticky top-0 h-20 bg-[#009EE4] flex items-center px-5 z-30">
           <Link to="/">
             <div className="w-12 h-12 flex items-center justify-center bg-white rounded-[50%]">
               <img className="h-8 w-8" src="/svg/logo.svg" alt="logo" />
@@ -183,7 +190,7 @@ const AdvPage = () => {
                 </div>
               ) : (
                 <div className="overflow-hidden h-[320px] box-border">
-                  <div className="absolute top-5 left-5 z-30">
+                  <div className="absolute top-5 left-5 z-10">
                     <Link to="/">
                       <img
                         className="h-full w-full"
@@ -291,8 +298,15 @@ const AdvPage = () => {
                       </div>
                     )}
                   </div>
-                  <Link to={`/sellerProfile/${ad.user_id}`}>
-                    <div className="flex flex-row items-center gap-4">
+                  <Link to={isScreenLg ? `/sellerProfile/${ad.user_id}` : ""}>
+                    <div
+                      onClick={
+                        isScreenLg
+                          ? console.log("23")
+                          : () => setSellerPageModal(true)
+                      }
+                      className="flex flex-row items-center gap-4"
+                    >
                       <div className="w-[40px] h-[40px] rounded-[50%] bg-[#F0F0F0] overflow-hidden">
                         {ad.user.avatar ? (
                           <img src={`${PATH}/${ad.user.avatar}`} alt="avatar" />
@@ -334,19 +348,38 @@ const AdvPage = () => {
               </div>
             )}
           </div>
+          {!isScreenLg && reviewsModalIsOpen && (
+            <div className="absolute top-0 h-full w-full bg-white z-20">
+              <ReviewsModalMobile
+                closeModal={closeReviewsModal}
+                data={feedback}
+                adsFeedback={adsFeedback}
+              />
+            </div>
+          )}
+          {!isScreenLg && sellerPageModal && (
+            <div className="absolute top-0 h-full w-full bg-white z-20">
+              <SellerPageModal closeModal={closeSellerModal} id={ad.user.id} />
+            </div>
+          )}
           {isScreenLg ? <div /> : <MobileMenu openAddModal={openAddModal} />}
-          <Modal
-            isOpen={reviewsModalIsOpen}
-            onRequestClose={closeReviewsModal}
-            style={customStyles}
-            contentLabel="Reviews Modal"
-          >
-            <ReviewsModal
-              closeModal={closeReviewsModal}
-              data={feedback}
-              adsFeedback={adsFeedback}
-            />
-          </Modal>
+          {isScreenLg ? (
+            <Modal
+              isOpen={reviewsModalIsOpen}
+              onRequestClose={closeReviewsModal}
+              style={customStyles}
+              contentLabel="Reviews Modal"
+            >
+              <ReviewsModal
+                closeModal={closeReviewsModal}
+                data={feedback}
+                adsFeedback={adsFeedback}
+              />
+            </Modal>
+          ) : (
+            ""
+          )}
+
           <Modal
             isOpen={updateModalIsOpen}
             onRequestClose={closeUpdateModal}

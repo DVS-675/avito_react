@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const MobileMenu = ({ openAddModal }) => {
   return (
-    <div className=" w-full h-[54px] bottom-0 sticky px-5 bg-white mt-5">
+    <div className=" w-full h-[54px] bottom-0 sticky px-5 bg-white mt-5 z-30">
       <div className="w-full h-full flex flex-row items-center justify-between">
         <Link to="/">
           <img

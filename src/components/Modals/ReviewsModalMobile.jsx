@@ -4,8 +4,11 @@ import ButtonBlue from "../UI/Buttons/ButtonBlue";
 import { useParams } from "react-router";
 import { AddAdsFeedback } from "../../api";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
+import { formatDistance } from "date-fns";
+import { ru } from "date-fns/locale";
 
-const ReviewsModal = ({ closeModal, data, adsFeedback }) => {
+const ReviewsModalMobile = ({ closeModal, data, adsFeedback }) => {
   const [disabled, setDisabled] = useState(true);
   const [review, setReview] = useState("");
   const { id } = useParams();
@@ -34,27 +37,32 @@ const ReviewsModal = ({ closeModal, data, adsFeedback }) => {
   };
   const PATH = "http://localhost:8090";
 
+  console.log(data);
+
   return (
-    <div className="relative flex justify-center items-center w-full h-full z-20">
-      <div className="h-full w-full bg-white px-[50px] py-[20px] overflow-y-auto rounded-[12px] ">
+    <div className="relative flex justify-center items-center w-full h-full ">
+      <div className="h-full w-full bg-white px-5 py-[30px] overflow-y-auto  ">
         <div className="flex flex-col items-start gap-5">
-          <div className="w-full flex flex-row items-center justify-between ">
-            <p className="text-[32px] font-medium ">Отзывы о товаре</p>
+          <div className="w-full flex flex-row items-center gap-10 ">
             <div onClick={closeModal} className="cursor-pointer">
-              <img src="/svg/close.svg" alt="закрыть" />
+              <img
+                className="h-[18px] w-full"
+                src="/svg/back_button.svg"
+                alt="image"
+              />
             </div>
+            <p className="text-[24px] font-medium ">Отзывы о товаре</p>
           </div>
 
           <div className="flex flex-col items-start justify-start gap-3 w-full relative">
-            <p className="text-[16px] font-[600] mb-3">Добавить отзыв</p>
             <textarea
-              className="h-[100px] w-full border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[6px] flex items-start justify-start px-5 py-5 outline-none"
+              className="h-[100px] w-full border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[20px] flex items-start justify-start px-5 py-5 outline-none"
               type="textarea"
               placeholder="Введите отзыв"
               name="review"
               onChange={(event) => setReview(event.target.value)}
             />
-            <div onClick={handleAddReview} className="w-[181px]">
+            <div onClick={handleAddReview} className="w-full">
               <ButtonBlue text="Опубликовать" disabled={disabled} />
             </div>
           </div>
@@ -64,7 +72,7 @@ const ReviewsModal = ({ closeModal, data, adsFeedback }) => {
                 key={item.id}
                 className="flex flex-row items-start justify-start gap-3"
               >
-                <div className="aspect-square w-[60px] rounded-[50%] bg-[#F0F0F0]">
+                <div className="aspect-square w-[40px] rounded-[50%] bg-[#F0F0F0]">
                   {item && item.author ? (
                     <img
                       className="object-cover h-full w-full rounded-[50%]"
@@ -97,4 +105,4 @@ const ReviewsModal = ({ closeModal, data, adsFeedback }) => {
   );
 };
 
-export default ReviewsModal;
+export default ReviewsModalMobile;
