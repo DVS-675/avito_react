@@ -10,20 +10,15 @@ import NewAdv from "../components/Modals/NewAdv.jsx";
 import { Link } from "react-router-dom";
 import { useResize } from "../helpers/hooks/useResize.jsx";
 import MobileMenu from "../components/MobileMenu/MobileMenu.jsx";
+import NewAdvMobile from "../components/Modals/NewAdvMobile.jsx";
+import ProfilePageModal from "../components/Modals/ProfilePageModal.jsx";
 
 const MainPage = () => {
   const [ads, setAds] = useState();
   const [filteredAds, setFilteredAds] = useState();
   const [searchValue, setSearchValue] = useState("");
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
-
-  function openAddModal() {
-    setAddModalIsOpen(true);
-  }
-
-  function closeAddModal() {
-    setAddModalIsOpen(false);
-  }
+  const [profileModalIsOpen, setProfileModalIsOpen] = useState(false);
 
   const getAds = async () => {
     const responseData = await getAllAds();
@@ -73,9 +68,9 @@ const MainPage = () => {
   return (
     <div className="h-full w-full relative">
       {isScreenLg ? (
-        <Header openAddModal={openAddModal} />
+        <Header openAddModal={() => setAddModalIsOpen(true)} />
       ) : (
-        <div className="w-full sticky top-0 h-20 bg-[#009EE4] flex items-center px-5 z-20">
+        <div className="w-full sticky top-0 h-20 bg-[#009EE4] flex items-center px-5 z-30">
           <Link to="/">
             <div className="w-12 h-12 flex items-center justify-center bg-white rounded-[50%]">
               <img className="h-8 w-8" src="/svg/logo.svg" alt="logo" />
@@ -91,15 +86,13 @@ const MainPage = () => {
                 onInput={(e) => setSearchValue(e.target.value)}
               />
             </div>
-
             <div onClick={HandleFilterAds} className="w-[30%]">
               <ButtonBlue text="Найти" />
             </div>
           </div>
         </div>
       )}
-
-      <div className="relative px-5 lg:px-[140px]">
+      <div className="relative px-0 lg:px-[140px]">
         <div className="hidden h-[50px] w-full lg:flex flex-row items-center justify-between gap-14 my-10 ">
           <img src="/svg/logo.svg" alt="logo" />
           <div className="flex flex-row w-full gap-2">
@@ -115,7 +108,7 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-        <div className="h-full w-full relative">
+        <div className="h-full w-full relative px-5">
           <SectionTitle text="Объявления" />
           <div className="flex flex-wrap flex-row gap-2 lg:gap-7 items-start justify-start lg:justify-start">
             {filteredAds
@@ -136,16 +129,44 @@ const MainPage = () => {
                 ))}
           </div>
         </div>
+        {!isScreenLg && addModalIsOpen && (
+          <div className="absolute top-0 h-full w-full bg-white z-20">
+            <NewAdvMobile
+              closeModal={() => setAddModalIsOpen(false)}
+              getAds={getAds}
+            />
+          </div>
+        )}
+        {!isScreenLg && profileModalIsOpen && (
+          <div className="absolute top-0 h-full w-full bg-white z-20">
+            <ProfilePageModal />
+          </div>
+        )}
       </div>
-      {isScreenLg ? <div /> : <MobileMenu openAddModal={openAddModal} />}
-      <Modal
-        isOpen={addModalIsOpen}
-        onRequestClose={closeAddModal}
-        style={customStyles}
-        contentLabel="Add adv modal"
-      >
-        <NewAdv closeModal={closeAddModal} getAds={getAds} />
-      </Modal>
+
+      {isScreenLg ? (
+        <div />
+      ) : (
+        <MobileMenu
+          openAddModal={() => setAddModalIsOpen(true)}
+          closeAddModal={() => setAddModalIsOpen(false)}
+          openProfileModal={() => setProfileModalIsOpen(true)}
+          closeProfileModal={() => setProfileModalIsOpen(false)}
+        />
+      )}
+
+      {isScreenLg ? (
+        <Modal
+          isOpen={addModalIsOpen}
+          onRequestClose={() => setAddModalIsOpen(false)}
+          style={customStyles}
+          contentLabel="Add adv modal"
+        >
+          <NewAdv closeModal={() => setAddModalIsOpen(false)} getAds={getAds} />
+        </Modal>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

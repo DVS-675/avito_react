@@ -18,11 +18,16 @@ import MobileMenu from "../components/MobileMenu/MobileMenu";
 import { Pagination } from "swiper";
 import ReviewsModalMobile from "../components/Modals/ReviewsModalMobile";
 import SellerPageModal from "../components/Modals/SellerPageModal";
+import UpdateAdvMobile from "../components/Modals/UpdateAdvMobile";
+import NewAdvMobile from "../components/Modals/NewAdvMobile";
+import ProfilePageModal from "../components/Modals/ProfilePageModal";
 const AdvPage = () => {
   const { id } = useParams();
   const [reviewsModalIsOpen, setReviewsModalIsOpen] = React.useState(false);
   const [sellerPageModal, setSellerPageModal] = useState(false);
+  const [profileModalIsOpen, setProfileModalIsOpen] = useState(false);
   const [updateModalIsOpen, setUpdateModalIsOpen] = React.useState(false);
+
   const [myAdv, setMyAdv] = useState(false);
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [feedback, setFeedback] = useState();
@@ -51,34 +56,6 @@ const AdvPage = () => {
     await deleteAd(ad.id, token);
     setDeletedAdd(true);
   };
-
-  function openAddModal() {
-    setAddModalIsOpen(true);
-  }
-
-  function closeAddModal() {
-    setAddModalIsOpen(false);
-  }
-
-  function openReviewsModal() {
-    setReviewsModalIsOpen(true);
-  }
-
-  function openUpdateModal() {
-    setUpdateModalIsOpen(true);
-  }
-
-  function closeReviewsModal() {
-    setReviewsModalIsOpen(false);
-  }
-
-  function closeUpdateModal() {
-    setUpdateModalIsOpen(false);
-  }
-
-  function closeSellerModal() {
-    setSellerPageModal(false);
-  }
 
   useEffect(() => {
     adsFeedback();
@@ -130,9 +107,9 @@ const AdvPage = () => {
   };
 
   return (
-    <div className="h-full w-full relative">
+    <div className="h-fit w-full relative">
       {isScreenLg ? (
-        <Header openAddModal={openAddModal} />
+        <Header openAddModal={() => setAddModalIsOpen(true)} />
       ) : (
         <div className="w-full sticky top-0 h-20 bg-[#009EE4] flex items-center px-5 z-30">
           <Link to="/">
@@ -143,7 +120,7 @@ const AdvPage = () => {
         </div>
       )}
       {ad && (
-        <div className="relative px-0 lg:px-[140px]">
+        <div className="relative px-0 lg:px-[140px] h-fit">
           <div className="hidden h-[50px] w-full lg:flex flex-row items-center justify-start gap-14 my-10 ">
             <img src="/svg/logo.svg" alt="logo" />
             <div className="w-[241px]">
@@ -199,39 +176,45 @@ const AdvPage = () => {
                       />
                     </Link>
                   </div>
-                  <Swiper
-                    slidesPerView={1}
-                    speed={900}
-                    spaceBetween={0}
-                    allowTouchMove
-                    pagination={{
-                      dynamicBullets: true,
-                    }}
-                    modules={[Pagination]}
-                    style={{
-                      overflow: "hidden",
-                      width: "100%",
-                      height: "100%",
-                      marginLeft: 0,
-                    }}
-                  >
-                    {ad.images.map((image) => (
-                      <SwiperSlide className="h-full" key={image?.ad_id}>
-                        <div
-                          key={image?.ad_id}
-                          className="relative h-full w-full"
-                        >
-                          <LightGallery>
-                            <img
-                              src={`${PATH}/${image?.url}`}
-                              alt="image"
-                              className="object-cover h-full w-full"
-                            />
-                          </LightGallery>
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
+                  {ad.images[0]?.url ? (
+                    <Swiper
+                      slidesPerView={1}
+                      speed={900}
+                      spaceBetween={0}
+                      allowTouchMove
+                      pagination={{
+                        dynamicBullets: true,
+                      }}
+                      modules={[Pagination]}
+                      style={{
+                        overflow: "hidden",
+                        width: "100%",
+                        height: "100%",
+                        marginLeft: 0,
+                      }}
+                    >
+                      {ad.images.map((image) => (
+                        <SwiperSlide className="h-full" key={image?.ad_id}>
+                          <div
+                            key={image?.ad_id}
+                            className="relative h-full w-full"
+                          >
+                            <LightGallery>
+                              <img
+                                src={`${PATH}/${image?.url}`}
+                                alt="image"
+                                className="object-cover h-full w-full"
+                              />
+                            </LightGallery>
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      Изображение отсутствует
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -261,7 +244,7 @@ const AdvPage = () => {
                       </div>
                       {feedback ? (
                         <div
-                          onClick={openReviewsModal}
+                          onClick={() => setReviewsModalIsOpen(true)}
                           className="text-[16px] font-normal text-[#009EE4] cursor-pointer"
                         >
                           {`${feedback.length} отзыва`}
@@ -279,7 +262,7 @@ const AdvPage = () => {
                       <div className="flex flex-col lg:flex-row gap-3 items-center w-full lg:w-fit">
                         <div
                           className="w-full lg:w-fit"
-                          onClick={openUpdateModal}
+                          onClick={() => setUpdateModalIsOpen(true)}
                         >
                           <ButtonBlue text="Редактировать" />
                         </div>
@@ -351,7 +334,7 @@ const AdvPage = () => {
           {!isScreenLg && reviewsModalIsOpen && (
             <div className="absolute top-0 h-full w-full bg-white z-20">
               <ReviewsModalMobile
-                closeModal={closeReviewsModal}
+                closeModal={() => setReviewsModalIsOpen(false)}
                 data={feedback}
                 adsFeedback={adsFeedback}
               />
@@ -359,19 +342,50 @@ const AdvPage = () => {
           )}
           {!isScreenLg && sellerPageModal && (
             <div className="absolute top-0 h-full w-full bg-white z-20">
-              <SellerPageModal closeModal={closeSellerModal} id={ad.user.id} />
+              <SellerPageModal
+                closeModal={() => setSellerPageModal(false)}
+                id={ad.user.id}
+              />
             </div>
           )}
-          {isScreenLg ? <div /> : <MobileMenu openAddModal={openAddModal} />}
+          {!isScreenLg && updateModalIsOpen && (
+            <div className="absolute top-0 h-full w-full bg-white z-20">
+              <UpdateAdvMobile
+                closeModal={() => setUpdateModalIsOpen(false)}
+                ad={ad}
+                currentAd={currentAd}
+              />
+            </div>
+          )}
+          {!isScreenLg && addModalIsOpen && (
+            <div className="absolute top-0 h-full w-full bg-white z-20">
+              <NewAdvMobile closeModal={() => setAddModalIsOpen(false)} />
+            </div>
+          )}
+          {!isScreenLg && profileModalIsOpen && (
+            <div className="absolute top-0 h-full w-full bg-white z-20">
+              <ProfilePageModal />
+            </div>
+          )}
+          {isScreenLg ? (
+            <div />
+          ) : (
+            <MobileMenu
+              openAddModal={() => setAddModalIsOpen(true)}
+              closeAddModal={() => setAddModalIsOpen(false)}
+              openProfileModal={() => setProfileModalIsOpen(true)}
+              closeProfileModal={() => setProfileModalIsOpen(false)}
+            />
+          )}
           {isScreenLg ? (
             <Modal
               isOpen={reviewsModalIsOpen}
-              onRequestClose={closeReviewsModal}
+              onRequestClose={() => setReviewsModalIsOpen(false)}
               style={customStyles}
               contentLabel="Reviews Modal"
             >
               <ReviewsModal
-                closeModal={closeReviewsModal}
+                closeModal={() => setReviewsModalIsOpen(false)}
                 data={feedback}
                 adsFeedback={adsFeedback}
               />
@@ -379,27 +393,34 @@ const AdvPage = () => {
           ) : (
             ""
           )}
-
-          <Modal
-            isOpen={updateModalIsOpen}
-            onRequestClose={closeUpdateModal}
-            style={customStyles}
-            contentLabel="Update adv modal"
-          >
-            <UpdateAdv
-              closeModal={closeUpdateModal}
-              ad={ad}
-              currentAd={currentAd}
-            />
-          </Modal>
-          <Modal
-            isOpen={addModalIsOpen}
-            onRequestClose={closeAddModal}
-            style={customStyles}
-            contentLabel="New adv modal"
-          >
-            <NewAdv closeModal={closeAddModal} />
-          </Modal>
+          {isScreenLg ? (
+            <Modal
+              isOpen={updateModalIsOpen}
+              onRequestClose={() => setUpdateModalIsOpen(false)}
+              style={customStyles}
+              contentLabel="Update adv modal"
+            >
+              <UpdateAdv
+                closeModal={() => setUpdateModalIsOpen(false)}
+                ad={ad}
+                currentAd={currentAd}
+              />
+            </Modal>
+          ) : (
+            ""
+          )}
+          {isScreenLg ? (
+            <Modal
+              isOpen={addModalIsOpen}
+              onRequestClose={() => setAddModalIsOpen(false)}
+              style={customStyles}
+              contentLabel="New adv modal"
+            >
+              <NewAdv closeModal={() => setAddModalIsOpen(false)} />
+            </Modal>
+          ) : (
+            ""
+          )}
         </div>
       )}
     </div>
