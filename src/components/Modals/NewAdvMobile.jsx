@@ -38,7 +38,7 @@ const NewAdvMobile = ({ closeModal, getAds }) => {
     [price]
   );
   return (
-    <div className="relative flex justify-center items-center w-full h-fit ">
+    <div className="relative flex justify-center items-center w-full h-full ">
       <div className="h-full w-full bg-white px-5 py-[30px] overflow-y-auto  ">
         <div className="flex flex-col items-start gap-5 h-full">
           <div className="w-full flex flex-row items-center gap-10 relative">

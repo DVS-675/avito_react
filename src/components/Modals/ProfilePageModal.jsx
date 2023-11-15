@@ -69,8 +69,8 @@ const ProfilePageModal = () => {
   }, []);
 
   return (
-    <div className="relative flex justify-center items-center w-full h-full">
-      <div className="h-full w-full bg-white px-5 pb-[70px] overflow-y-auto  ">
+    <div className="relative flex justify-center items-center w-full h-full overflow-y-auto ">
+      <div className="h-full w-full bg-white px-5 pb-[70px]">
         <div className="h-full w-full relative">
           <SectionTitle text="Здравствуйте, Дмитрий" />
           <div className="flex flex-col items-start justify-between mb-10">

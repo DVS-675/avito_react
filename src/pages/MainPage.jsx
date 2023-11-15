@@ -130,7 +130,7 @@ const MainPage = () => {
           </div>
         </div>
         {!isScreenLg && addModalIsOpen && (
-          <div className="absolute top-0 h-full w-full bg-white z-20">
+          <div className="absolute top-0 h-full w-fit bg-white z-20">
             <NewAdvMobile
               closeModal={() => setAddModalIsOpen(false)}
               getAds={getAds}
@@ -147,12 +147,14 @@ const MainPage = () => {
       {isScreenLg ? (
         <div />
       ) : (
-        <MobileMenu
-          openAddModal={() => setAddModalIsOpen(true)}
-          closeAddModal={() => setAddModalIsOpen(false)}
-          openProfileModal={() => setProfileModalIsOpen(true)}
-          closeProfileModal={() => setProfileModalIsOpen(false)}
-        />
+        <div className=" w-full h-[54px] bottom-0 sticky px-5 bg-white mt-5 z-30">
+          <MobileMenu
+            openAddModal={() => setAddModalIsOpen(true)}
+            closeAddModal={() => setAddModalIsOpen(false)}
+            openProfileModal={() => setProfileModalIsOpen(true)}
+            closeProfileModal={() => setProfileModalIsOpen(false)}
+          />
+        </div>
       )}
 
       {isScreenLg ? (

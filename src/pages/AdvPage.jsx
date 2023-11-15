@@ -107,7 +107,7 @@ const AdvPage = () => {
   };
 
   return (
-    <div className="h-fit w-full relative">
+    <div className="h-[1100px] w-full relative">
       {isScreenLg ? (
         <Header openAddModal={() => setAddModalIsOpen(true)} />
       ) : (
@@ -120,7 +120,7 @@ const AdvPage = () => {
         </div>
       )}
       {ad && (
-        <div className="relative px-0 lg:px-[140px] h-fit">
+        <div className="relative px-0 lg:px-[140px] h-full">
           <div className="hidden h-[50px] w-full lg:flex flex-row items-center justify-start gap-14 my-10 ">
             <img src="/svg/logo.svg" alt="logo" />
             <div className="w-[241px]">
@@ -129,7 +129,7 @@ const AdvPage = () => {
               </Link>
             </div>
           </div>
-          <div className="grid grid-cols-12 gap-5 lg:gap-20 w-full lg:my-10">
+          <div className="grid grid-cols-12 gap-5 lg:gap-20 w-full lg:my-10 h-fit">
             <div className="col-span-12 lg:col-span-6 2xl:col-span-4">
               {isScreenLg ? (
                 <div className="flex flex-col items-center justify-between gap-7 w-full">
@@ -218,7 +218,7 @@ const AdvPage = () => {
                 </div>
               )}
             </div>
-            <div className="col-span-12 lg:col-span-6 2xl:col-span-8 px-5 lg:px-0">
+            <div className="col-span-12 lg:col-span-6 2xl:col-span-8 px-5 lg:px-0 h-fit">
               {deletedAdd ? (
                 <div className="w-full h-full flex items-center justify-center text-[32px] font-normal">
                   Объявление удалено!
@@ -317,7 +317,7 @@ const AdvPage = () => {
               )}
             </div>
           </div>
-          <div className="flex flex-col items-start gap-3 lg:gap-5 h-full my-10 w-[60%] px-5 lg:px-0">
+          <div className="flex flex-col items-start gap-3 lg:gap-5 h-fit my-10 w-[60%] px-5 lg:px-0">
             <div className="text-[18px] lg:text-[32px] font-medium text-[#000]">
               Описание товара
             </div>
@@ -357,26 +357,13 @@ const AdvPage = () => {
               />
             </div>
           )}
-          {!isScreenLg && addModalIsOpen && (
-            <div className="absolute top-0 h-full w-full bg-white z-20">
-              <NewAdvMobile closeModal={() => setAddModalIsOpen(false)} />
-            </div>
-          )}
+
           {!isScreenLg && profileModalIsOpen && (
-            <div className="absolute top-0 h-full w-full bg-white z-20">
+            <div className="absolute top-0 h-fit w-full bg-white z-20">
               <ProfilePageModal />
             </div>
           )}
-          {isScreenLg ? (
-            <div />
-          ) : (
-            <MobileMenu
-              openAddModal={() => setAddModalIsOpen(true)}
-              closeAddModal={() => setAddModalIsOpen(false)}
-              openProfileModal={() => setProfileModalIsOpen(true)}
-              closeProfileModal={() => setProfileModalIsOpen(false)}
-            />
-          )}
+
           {isScreenLg ? (
             <Modal
               isOpen={reviewsModalIsOpen}
@@ -421,6 +408,23 @@ const AdvPage = () => {
           ) : (
             ""
           )}
+        </div>
+      )}
+      {isScreenLg ? (
+        <div />
+      ) : (
+        <div className=" w-full h-[54px] bottom-0 sticky px-5 bg-white mt-5 z-30">
+          <MobileMenu
+            openAddModal={() => setAddModalIsOpen(true)}
+            closeAddModal={() => setAddModalIsOpen(false)}
+            openProfileModal={() => setProfileModalIsOpen(true)}
+            closeProfileModal={() => setProfileModalIsOpen(false)}
+          />
+        </div>
+      )}
+      {!isScreenLg && addModalIsOpen && (
+        <div className="absolute top-0 h-full w-full bg-white z-20">
+          <NewAdvMobile closeModal={() => setAddModalIsOpen(false)} />
         </div>
       )}
     </div>
