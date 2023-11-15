@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useAllowedContext } from "../../contexts/allowed";
 
 const MobileMenu = ({
   openAddModal,
@@ -8,7 +9,7 @@ const MobileMenu = ({
   closeProfileModal,
 }) => {
   const navigate = useNavigate();
-
+  const { isAllowed, setIsAllowed } = useAllowedContext();
   const handleClose = () => {
     if (closeProfileModal) {
       closeProfileModal();
@@ -23,15 +24,22 @@ const MobileMenu = ({
     if (openProfileModal) {
       closeProfileModal();
     }
-
-    openAddModal();
+    if (isAllowed) {
+      openAddModal();
+    } else {
+      navigate("/login");
+    }
   };
 
   const handleProfile = () => {
     if (openAddModal) {
       closeAddModal();
     }
-    openProfileModal();
+    if (isAllowed) {
+      openProfileModal();
+    } else {
+      navigate("/login");
+    }
   };
 
   return (

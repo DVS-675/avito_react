@@ -21,13 +21,14 @@ import SellerPageModal from "../components/Modals/SellerPageModal";
 import UpdateAdvMobile from "../components/Modals/UpdateAdvMobile";
 import NewAdvMobile from "../components/Modals/NewAdvMobile";
 import ProfilePageModal from "../components/Modals/ProfilePageModal";
+import { useAllowedContext } from "../contexts/allowed";
 const AdvPage = () => {
   const { id } = useParams();
   const [reviewsModalIsOpen, setReviewsModalIsOpen] = React.useState(false);
   const [sellerPageModal, setSellerPageModal] = useState(false);
   const [profileModalIsOpen, setProfileModalIsOpen] = useState(false);
   const [updateModalIsOpen, setUpdateModalIsOpen] = React.useState(false);
-
+ 
   const [myAdv, setMyAdv] = useState(false);
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [feedback, setFeedback] = useState();
@@ -36,9 +37,16 @@ const AdvPage = () => {
   const PATH = "http://localhost:8090";
   const token = Cookies.get("accessToken");
 
+  console.log(isAllowed);
+
   const adsFeedback = async () => {
     const feedback = await getAdsFeedback(id);
     setFeedback(feedback);
+  };
+
+  const closeProfileModal = () => {
+    setAddModalIsOpen(false);
+    setProfileModalIsOpen(false);
   };
 
   const currentAd = async () => {
@@ -357,10 +365,14 @@ const AdvPage = () => {
               />
             </div>
           )}
-
+          {!isScreenLg && addModalIsOpen && (
+            <div className="absolute top-0 h-fit w-full bg-white z-20">
+              <NewAdvMobile closeModal={() => setAddModalIsOpen(false)} />
+            </div>
+          )}
           {!isScreenLg && profileModalIsOpen && (
             <div className="absolute top-0 h-fit w-full bg-white z-20">
-              <ProfilePageModal />
+              <ProfilePageModal closeModal={closeProfileModal} />
             </div>
           )}
 
@@ -420,11 +432,6 @@ const AdvPage = () => {
             openProfileModal={() => setProfileModalIsOpen(true)}
             closeProfileModal={() => setProfileModalIsOpen(false)}
           />
-        </div>
-      )}
-      {!isScreenLg && addModalIsOpen && (
-        <div className="absolute top-0 h-full w-full bg-white z-20">
-          <NewAdvMobile closeModal={() => setAddModalIsOpen(false)} />
         </div>
       )}
     </div>

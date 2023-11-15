@@ -33,6 +33,7 @@ const ProfilePage = () => {
   const handleLogout = () => {
     delToken();
     setIsAllowed(false);
+    navigate("/");
   };
 
   const token = Cookies.get("accessToken");

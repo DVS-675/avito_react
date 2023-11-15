@@ -10,11 +10,12 @@ import {
 import { useAllowedContext } from "../../contexts/allowed";
 import ButtonBlue from "../UI/Buttons/ButtonBlue";
 import AdvertItem from "../Advert/AdvertItem";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SectionTitle from "../UI/SectionTitle/SectionTitle";
 import LightGallery from "lightgallery/react";
+import { delToken } from "../../helpers/AuthHelpers";
 
-const ProfilePageModal = () => {
+const ProfilePageModal = ({ closeModal }) => {
   const [userAds, setUserAds] = useState();
   const { isAllowed, setIsAllowed } = useAllowedContext();
   const [user, setUser] = useState();
@@ -22,12 +23,14 @@ const ProfilePageModal = () => {
   const [surname, setSurname] = useState();
   const [city, setCity] = useState();
   const [phone, setPhone] = useState();
+  const navigate = useNavigate();
 
   const PATH = "http://localhost:8090";
 
   const handleLogout = () => {
     delToken();
     setIsAllowed(false);
+    navigate("/");
   };
 
   const token = Cookies.get("accessToken");
@@ -167,6 +170,9 @@ const ProfilePageModal = () => {
                   <div onClick={() => updateUser()} className="w-full">
                     <ButtonBlue text="Сохранить" />
                   </div>
+                  <div onClick={() => handleLogout()} className="w-full">
+                    <ButtonBlue text="Выйти" />
+                  </div>
                 </div>
               </div>
             )}
@@ -177,7 +183,7 @@ const ProfilePageModal = () => {
           <div className="flex flex-wrap flex-row gap-7 items-center ">
             {userAds &&
               userAds.map((item) => (
-                <div key={item.index}>
+                <div onClick={closeModal} key={item.index}>
                   <Link to={`/advertisement/${item.id}`}>
                     <AdvertItem item={item} />
                   </Link>
