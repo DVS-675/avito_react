@@ -75,7 +75,9 @@ const ProfilePageModal = ({ closeModal }) => {
     <div className="relative flex justify-center items-center w-full h-full overflow-y-auto ">
       <div className="h-full w-full bg-white px-5 pb-[70px]">
         <div className="h-full w-full relative">
-          <SectionTitle text="Здравствуйте, Дмитрий" />
+          {user && user.name && (
+            <SectionTitle text={`Здравствуйте, ${user.name}`} />
+          )}
           <div className="flex flex-col items-start justify-between mb-10">
             <div className="text-[18px] font-medium text-black pb-5">
               Настройки профиля
@@ -112,11 +114,10 @@ const ProfilePageModal = ({ closeModal }) => {
                     <input
                       className="h-[50px] text-[14px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[30px] w-full flex items-center justify-center px-5 outline-none"
                       type="text"
-                      placeholder={
+                      defaultValue={
                         user && user.name ? user.name : "Введите имя"
                       }
                       name="name"
-                      value={name ? name : ""}
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
@@ -125,10 +126,9 @@ const ProfilePageModal = ({ closeModal }) => {
                     <input
                       className="h-[50px] text-[14px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[30px] w-full flex items-center justify-center px-5 outline-none"
                       type="text"
-                      placeholder={
+                      defaultValue={
                         user && user.surname ? user.surname : "Введите фамилию"
                       }
-                      value={surname ? surname : ""}
                       name="surname"
                       onChange={(e) => setSurname(e.target.value)}
                     />
@@ -140,10 +140,9 @@ const ProfilePageModal = ({ closeModal }) => {
                       <input
                         className=" h-[50px] text-[14px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[30px] w-full flex items-center justify-center px-5 outline-none"
                         type="text"
-                        placeholder={
+                        defaultValue={
                           user && user.city ? user.city : "Введите город"
                         }
-                        value={city ? city : ""}
                         name="city"
                         onChange={(e) => setCity(e.target.value)}
                       />
@@ -161,8 +160,7 @@ const ProfilePageModal = ({ closeModal }) => {
                       mask="+7 (999) 999-99-99"
                       className="h-[50px] text-[14px] border-[1px] border-[#00000033] focus:border-[#009EE4] rounded-[30px] w-full flex items-center justify-center px-5 outline-none"
                       type="tel"
-                      placeholder={user && user.phone ? user.phone : "+7"}
-                      value={phone ? phone : ""}
+                      defaultValue={user && user.phone ? user.phone : "+7"}
                       name="phone"
                       onChange={(e) => setPhone(e.target.value)}
                     />
