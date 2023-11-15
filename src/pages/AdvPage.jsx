@@ -21,14 +21,14 @@ import SellerPageModal from "../components/Modals/SellerPageModal";
 import UpdateAdvMobile from "../components/Modals/UpdateAdvMobile";
 import NewAdvMobile from "../components/Modals/NewAdvMobile";
 import ProfilePageModal from "../components/Modals/ProfilePageModal";
-import { useAllowedContext } from "../contexts/allowed";
+
 const AdvPage = () => {
   const { id } = useParams();
   const [reviewsModalIsOpen, setReviewsModalIsOpen] = React.useState(false);
   const [sellerPageModal, setSellerPageModal] = useState(false);
   const [profileModalIsOpen, setProfileModalIsOpen] = useState(false);
   const [updateModalIsOpen, setUpdateModalIsOpen] = React.useState(false);
- 
+
   const [myAdv, setMyAdv] = useState(false);
   const [addModalIsOpen, setAddModalIsOpen] = useState(false);
   const [feedback, setFeedback] = useState();
@@ -36,8 +36,6 @@ const AdvPage = () => {
   const [deletedAdd, setDeletedAdd] = useState(false);
   const PATH = "http://localhost:8090";
   const token = Cookies.get("accessToken");
-
-  console.log(isAllowed);
 
   const adsFeedback = async () => {
     const feedback = await getAdsFeedback(id);
