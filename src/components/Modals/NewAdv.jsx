@@ -74,17 +74,8 @@ const NewAdv = ({ closeModal, getAds }) => {
                   не более 5 фотографий
                 </p>
               </div>
-              <div className="w-full flex flex-row items-center gap-2">
-                <div className="w-[90px] h-[90px] bg-[#F0F0F0] relative cursor-pointer">
-                  <div className="absolute z-10 top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] stroke-black">
-                    <img src="/svg/plus.svg" alt="закрыть" />
-                  </div>
-                </div>
-                <div className="w-[90px] h-[90px] bg-[#F0F0F0] relative cursor-pointer">
-                  <div className="absolute z-10 top-[50%] right-[50%] translate-x-[50%] translate-y-[-50%] stroke-black">
-                    <img src="/svg/plus.svg" alt="закрыть" />
-                  </div>
-                </div>
+              <div className="w-full flex flex-row items-center gap-2 mt-3">
+                Фото добавляется в редактировании объявления
               </div>
             </div>
             <p className="text-[16px] font-[600] mb-1">Цена</p>
