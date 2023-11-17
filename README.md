@@ -1,6 +1,6 @@
 
 
-App for selling and buying goods and services,  similar to well known Avito. The project was developed using modern tools and technologies such as React, Redux Toolkit, CSS Modules, Docker and TypeScript. Also mobile version is available.
+App for selling and buying goods and services,  similar to well known Avito. The project was developed using modern tools and technologies such as React, Tailwind, Docker and JavaScript. Also mobile version is available.
 
 ## Technologies used
 <div>
